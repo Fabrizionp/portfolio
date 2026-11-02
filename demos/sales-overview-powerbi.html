@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sales Overview · Power BI design</title>
+<style>
+  :root{
+    --navy:#0f1b2e; --navy-2:#13223a; --panel:#0c1627; --rail:#0b1424;
+    --tile:#c9ced8; --tile-text:#15213a; --muted:#9aa6bb; --text:#eef2f8;
+    --green:#2ecc71; --lime:#7ed321; --purple:#b48cf2; --cyan:#2bc4dd; --blue:#4c8cf5;
+    --accent:#2d7bff;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--navy);color:var(--text);font-family:"Segoe UI",system-ui,-apple-system,Arial,sans-serif}
+  .app{display:grid;grid-template-columns:176px 1fr;width:1750px;min-height:1000px}
+  .rail{background:var(--rail);padding:28px 0;display:flex;flex-direction:column;gap:34px;align-items:center}
+  .rail .brand{font-weight:800;color:#3b8cff;letter-spacing:.5px;font-size:20px;display:flex;align-items:center;gap:6px}
+  .rail .brand .home{width:14px;height:12px;border:2px solid #3b8cff;border-top-left-radius:2px;border-top-right-radius:2px;position:relative;top:1px}
+  .rail a{color:#55617a;font-weight:800;letter-spacing:1.5px;font-size:22px;text-decoration:none}
+  .rail a.active{color:#fff}
+  main{padding:26px 30px 24px 30px;display:grid;grid-template-rows:auto auto auto auto;gap:16px}
+  header{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:26px}
+  header h1{margin:0;font-size:34px;font-weight:900;letter-spacing:1px}
+  header .period{background:var(--navy-2);border-radius:14px;height:56px;display:flex;align-items:center;padding:0 22px;color:var(--muted);font-size:15px;gap:18px}
+  header .period b{color:#fff}
+  header .logo{background:#e9edf3;color:#2b3a55;border-radius:12px;padding:10px 20px;font-weight:800;font-size:22px;letter-spacing:.5px;display:flex;align-items:center;gap:10px}
+  header .logo .mark{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#2bc4dd,#4c8cf5)}
+  .kpis{display:grid;grid-template-columns:repeat(5,1fr) 330px;gap:22px}
+  .tile{background:var(--tile);border-radius:12px;height:126px;position:relative;overflow:hidden;color:var(--tile-text);padding:14px 16px}
+  .tile::before{content:"";position:absolute;left:0;right:0;top:0;height:9px;background:var(--c)}
+  .tile .t{font-weight:700;font-size:15px;margin-top:2px}
+  .tile .v{font-weight:800;font-size:30px;margin-top:10px;letter-spacing:-.5px}
+  .tile .d{font-size:13px;margin-top:4px;color:#3b4a66}
+  .tile .d b{color:#1f8f4e}
+  .tile .d b.neg{color:#c0392b}
+  .filters{background:var(--panel);border-radius:12px;padding:14px 16px}
+  .filters h3{margin:0 0 10px 0;font-size:14px;letter-spacing:1px;font-weight:800}
+  .filters .f{display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted);padding:5px 0;border-bottom:1px solid #1c2b45}
+  .filters .f b{color:#dfe6f3;font-weight:600}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  .panel{background:var(--panel);border-radius:12px;position:relative;overflow:hidden;padding:46px 18px 14px 18px}
+  .panel::before{content:"";position:absolute;left:0;right:0;top:0;height:30px;background:linear-gradient(180deg,#5c6b85,#223148)}
+  .panel h2{position:absolute;top:6px;left:18px;margin:0;font-size:14px;font-weight:800;letter-spacing:.6px;color:#f3f6fb}
+  .panel .legend{position:absolute;top:8px;right:18px;font-size:12px;color:#dfe6f3;display:flex;gap:14px}
+  .legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+  svg text{font-family:"Segoe UI",system-ui,Arial,sans-serif}
+  table{width:100%;border-collapse:collapse;font-size:12.5px}
+  th{color:var(--muted);text-align:left;font-weight:600;padding:4px 6px;border-bottom:1px solid #1c2b45}
+  td{padding:5px 6px;border-bottom:1px solid #15223a;white-space:nowrap}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+  .bar{height:8px;border-radius:4px;background:var(--cyan);display:inline-block;vertical-align:middle}
+  .pill{display:inline-block;padding:1px 7px;border-radius:9px;font-size:11px;font-weight:700}
+  .pill.up{background:#123b2a;color:#4fe3a1}
+  .pill.down{background:#3b1a1a;color:#ff8a80}
+</style>
+</head>
+<body>
+<div class="app">
+  <nav class="rail">
+    <div class="brand"><span class="home"></span>SUMMARY</div>
+    <a class="active" href="#">HOME</a>
+    <a href="#">AMAZON</a>
+    <a href="#">SHOPIFY</a>
+    <a href="#">TARGET</a>
+    <a href="#">WALMART</a>
+  </nav>
+  <main>
+    <header>
+      <h1>SALES OVERVIEW</h1>
+      <div class="period">Period <b>Jan 1 – Oct 31, 2026</b> · Compare <b>same period 2025</b> · Refreshed <b>Nov 2, 06:12 UTC</b></div>
+      <div class="logo"><span class="mark"></span>Northwind Wellness</div>
+    </header>
+
+    <section class="kpis" id="kpis"></section>
+
+    <section class="grid">
+      <div class="panel"><h2>NET SALES BY MONTH · 2026 vs 2025</h2>
+        <div class="legend"><span><i style="background:var(--cyan)"></i>2026</span><span><i style="background:#44546f"></i>2025</span></div>
+        <svg id="c1" width="100%" height="330" viewBox="0 0 740 330"></svg>
+      </div>
+      <div class="panel"><h2>NET SALES BY CHANNEL · share and growth</h2>
+        <svg id="c2" width="100%" height="330" viewBox="0 0 740 330"></svg>
+      </div>
+    </section>
+    <section class="grid">
+      <div class="panel"><h2>TOP 10 SKUs · net sales, units, margin</h2>
+        <div id="t1"></div>
+      </div>
+      <div class="panel"><h2>ORDERS AND UNITS BY WEEK · last 26 weeks</h2>
+        <div class="legend"><span><i style="background:var(--purple)"></i>Orders</span><span><i style="background:var(--cyan)"></i>Units</span></div>
+        <svg id="c3" width="100%" height="330" viewBox="0 0 740 330"></svg>
+      </div>
+    </section>
+  </main>
+</div>
+<script>
+// Deterministic synthetic data (seeded), so the screenshot is reproducible. No client data.
+let s = 20261102; const rnd = () => (s = (s * 1664525 + 1013904223) % 4294967296) / 4294967296;
+const fmt$ = n => "$" + Math.round(n).toLocaleString("en-US");
+const fmtK = n => n >= 1e6 ? (n/1e6).toFixed(2)+"M" : n >= 1e3 ? (n/1e3).toFixed(1)+"K" : String(Math.round(n));
+
+// KPIs
+const kpis = [
+  {t:"Net Sales ($)", v:"$8.42M", d:"+18.6 %", c:"var(--green)", pos:true},
+  {t:"Gross Profit ($)", v:"$3.91M", d:"+21.3 %", c:"var(--lime)", pos:true},
+  {t:"Orders", v:"214,380", d:"+14.9 %", c:"var(--purple)", pos:true},
+  {t:"Units", v:"402,115", d:"+16.2 %", c:"var(--cyan)", pos:true},
+  {t:"Customers", v:"168,940", d:"−2.1 %", c:"var(--blue)", pos:false},
+];
+document.getElementById("kpis").innerHTML = kpis.map(k =>
+  `<div class="tile" style="--c:${k.c}"><div class="t">${k.t}</div><div class="v">${k.v}</div><div class="d">vs LY <b class="${k.pos?"":"neg"}">${k.d}</b></div></div>`
+).join("") + `<div class="filters"><h3>SALES FILTERS</h3>
+  <div class="f"><span>Date range</span><b>YTD 2026</b></div>
+  <div class="f"><span>Channel</span><b>All (4)</b></div>
+  <div class="f"><span>Brand</span><b>Northwind</b></div>
+  <div class="f"><span>SKU family</span><b>All (9)</b></div>
+  <div class="f"><span>Order status</span><b>Shipped, Delivered</b></div></div>`;
+
+// Chart 1: monthly bars 2026 vs 2025 + line of margin
+(function(){
+  const svg = document.getElementById("c1"); const W=740,H=330,L=56,R=16,T=18,B=40;
+  const months=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct"];
+  const ly=[520,490,610,640,700,760,690,720,780,830].map(v=>v*1000);
+  const ty=ly.map((v,i)=>v*(1.10+0.12*Math.sin(i/2)+rnd()*0.06));
+  const max=Math.max(...ty)*1.15; const x=i=>L+i*((W-L-R)/months.length); const bw=(W-L-R)/months.length;
+  let g=""; for(let k=0;k<=4;k++){const y=T+(H-T-B)*(1-k/4); g+=`<line x1="${L}" x2="${W-R}" y1="${y}" y2="${y}" stroke="#1d2d48"/><text x="${L-8}" y="${y+4}" fill="#9aa6bb" font-size="11" text-anchor="end">${fmtK(max*k/4)}</text>`;}
+  months.forEach((m,i)=>{const h1=(H-T-B)*ly[i]/max,h2=(H-T-B)*ty[i]/max;
+    g+=`<rect x="${x(i)+bw*0.14}" y="${H-B-h1}" width="${bw*0.32}" height="${h1}" fill="#44546f" rx="2"/>`;
+    g+=`<rect x="${x(i)+bw*0.5}" y="${H-B-h2}" width="${bw*0.32}" height="${h2}" fill="#2bc4dd" rx="2"/>`;
+    g+=`<text x="${x(i)+bw/2}" y="${H-B+18}" fill="#c7d0e0" font-size="12" text-anchor="middle">${m}</text>`;
+    g+=`<text x="${x(i)+bw*0.66}" y="${H-B-h2-6}" fill="#eef2f8" font-size="11" text-anchor="middle">${fmtK(ty[i])}</text>`;});
+  svg.innerHTML=g;
+})();
+
+// Chart 2: channel share (horizontal bars) with growth pills
+(function(){
+  const svg=document.getElementById("c2"); const W=740,H=330;
+  const rows=[["Amazon",4.21,"+15 %","#2bc4dd"],["Shopify",2.13,"+27 %","#4c8cf5"],["Target",1.28,"+9 %","#b48cf2"],["Walmart",0.80,"+41 %","#7ed321"]];
+  const max=4.6; let g=""; const top=34, rh=66, L=110, R=120;
+  rows.forEach((r,i)=>{const y=top+i*rh; const w=(W-L-R)*r[1]/max;
+    g+=`<text x="${L-14}" y="${y+22}" fill="#eef2f8" font-size="15" font-weight="700" text-anchor="end">${r[0]}</text>`;
+    g+=`<rect x="${L}" y="${y}" width="${W-L-R}" height="34" rx="6" fill="#152339"/>`;
+    g+=`<rect x="${L}" y="${y}" width="${w}" height="34" rx="6" fill="${r[3]}"/>`;
+    const lbl=`$${r[1].toFixed(2)}M · ${Math.round(r[1]/8.42*100)} %`;
+    g+= w>150 ? `<text x="${L+w-10}" y="${y+22}" fill="#0f1b2e" font-size="13" font-weight="800" text-anchor="end">${lbl}</text>` : `<text x="${L+w+10}" y="${y+22}" fill="#eef2f8" font-size="13" font-weight="800">${lbl}</text>`;
+    g+=`<text x="${W-R+16}" y="${y+22}" fill="#4fe3a1" font-size="13" font-weight="700">${r[2]} vs LY</text>`;});
+  g+=`<text x="${L}" y="${top+4*rh+10}" fill="#9aa6bb" font-size="12">Share of net sales YTD · growth vs the same period last year · one definition of net sales per channel (Gold)</text>`;
+  svg.innerHTML=g;
+})();
+
+// Table: top 10 SKUs
+(function(){
+  const fam=["Knee Sleeve","Ankle Wrap","Back Belt","Head Wrap","Wrist Support","Elbow Sleeve","Neck Pillow","Foot Roller","Shoulder Wrap","Calf Sleeve"];
+  const rows=fam.map((f,i)=>{const ns=620000*Math.pow(0.86,i)*(0.95+rnd()*0.1); const u=Math.round(ns/(21+rnd()*9)); const m=0.41+rnd()*0.12; const g=(rnd()*40-8); return {sku:`NW-${f.split(" ")[0].toUpperCase().slice(0,4)}-${["S","M","L","XL"][i%4]}`,f,ns,u,m,g};});
+  const max=rows[0].ns;
+  document.getElementById("t1").innerHTML=`<table><thead><tr><th>SKU</th><th>Family</th><th>Net sales</th><th class="num">$</th><th class="num">Units</th><th class="num">Margin</th><th class="num">vs LY</th></tr></thead><tbody>`+
+    rows.map(r=>`<tr><td><b>${r.sku}</b></td><td>${r.f}</td><td><span class="bar" style="width:${Math.round(150*r.ns/max)}px"></span></td><td class="num">${fmt$(r.ns)}</td><td class="num">${r.u.toLocaleString("en-US")}</td><td class="num">${(r.m*100).toFixed(1)} %</td><td class="num"><span class="pill ${r.g>=0?"up":"down"}">${r.g>=0?"+":""}${r.g.toFixed(1)} %</span></td></tr>`).join("")+`</tbody></table>`;
+})();
+
+// Chart 3: weekly orders (line) and units (area)
+(function(){
+  const svg=document.getElementById("c3"); const W=740,H=330,L=56,R=56,T=18,B=36; const n=26;
+  const units=[],orders=[]; for(let i=0;i<n;i++){const base=13000+i*260+Math.sin(i/3)*1800; units.push(base*(0.95+rnd()*0.1)); orders.push(units[i]/(1.82+rnd()*0.1));}
+  const maxU=Math.max(...units)*1.12, maxO=Math.max(...orders)*1.12; const x=i=>L+i*((W-L-R)/(n-1));
+  const yU=v=>T+(H-T-B)*(1-v/maxU), yO=v=>T+(H-T-B)*(1-v/maxO);
+  let g=""; for(let k=0;k<=4;k++){const y=T+(H-T-B)*(1-k/4); g+=`<line x1="${L}" x2="${W-R}" y1="${y}" y2="${y}" stroke="#1d2d48"/><text x="${L-8}" y="${y+4}" fill="#9aa6bb" font-size="11" text-anchor="end">${fmtK(maxU*k/4)}</text><text x="${W-R+8}" y="${y+4}" fill="#9aa6bb" font-size="11">${fmtK(maxO*k/4)}</text>`;}
+  const area=`M${x(0)},${H-B} `+units.map((v,i)=>`L${x(i)},${yU(v)}`).join(" ")+` L${x(n-1)},${H-B} Z`;
+  g+=`<path d="${area}" fill="rgba(43,196,221,.18)"/><path d="M${units.map((v,i)=>`${x(i)},${yU(v)}`).join(" L")}" fill="none" stroke="#2bc4dd" stroke-width="2.5"/>`;
+  g+=`<path d="M${orders.map((v,i)=>`${x(i)},${yO(v)}`).join(" L")}" fill="none" stroke="#b48cf2" stroke-width="2.5" stroke-dasharray="1 0"/>`;
+  for(let i=0;i<n;i+=5){g+=`<text x="${x(i)}" y="${H-B+18}" fill="#c7d0e0" font-size="12" text-anchor="middle">W${i+19}</text>`;}
+  g+=`<text x="${L}" y="${H-4}" fill="#9aa6bb" font-size="11">Units (left axis, area) · Orders (right axis, line) · weeks 19–44 of 2026</text>`;
+  svg.innerHTML=g;
+})();
+</script>
+</body>
+</html>

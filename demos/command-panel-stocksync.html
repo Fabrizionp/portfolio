@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Command Panel · inventory intelligence</title>
+<style>
+  :root{
+    --bg:#0F1115; --card:#181C25; --card-2:#1d2230; --line:#262c3a; --text:#EFE9DC; --muted:#9a9fae;
+    --primary:#CBA56C; --primary-fg:#1B1308; --success:#67A26B; --warning:#D19C47; --destructive:#CB5A4D; --info:#5B9BD5;
+    --sidebar:#11141C;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,-apple-system,Arial,sans-serif;font-size:13px}
+  .app{display:grid;grid-template-columns:232px 1fr;width:1750px;min-height:1000px}
+  aside{background:var(--sidebar);border-right:1px solid var(--line);padding:18px 14px;display:flex;flex-direction:column;gap:4px}
+  aside .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:16px;margin-bottom:14px;padding:4px 6px}
+  aside .brand i{width:22px;height:22px;border-radius:6px;background:var(--primary);display:inline-block}
+  aside a{color:#cfd3dc;text-decoration:none;padding:7px 10px;border-radius:6px;font-size:13px;display:flex;justify-content:space-between}
+  aside a.active{background:#20263a;color:#fff;font-weight:600}
+  aside a.sub{padding-left:28px;color:#aeb4c2;font-size:12.5px}
+  aside .sec{margin-top:10px;color:#6f7585;font-size:10.5px;letter-spacing:1px;padding:4px 10px}
+  aside .foot{margin-top:auto;color:#6f7585;font-size:11px;padding:6px 10px}
+  main{padding:20px 26px 28px 26px}
+  .top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px}
+  h1{margin:0;font-size:22px;font-weight:700}
+  .top p{margin:2px 0 0 0;color:var(--muted)}
+  .ctl{display:flex;gap:14px;align-items:center;color:#cfd3dc}
+  .ctl .chk{display:flex;align-items:center;gap:6px}
+  .ctl .chk i{width:14px;height:14px;border-radius:3px;background:var(--primary);display:inline-block}
+  .btn{border:1px solid var(--line);background:transparent;color:#e8e3d6;padding:6px 10px;border-radius:6px;font-size:12px}
+  .btn.primary{background:var(--primary);color:var(--primary-fg);border-color:var(--primary);font-weight:700}
+  .flow{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;max-width:1200px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px}
+  .card h2{margin:0;font-size:16px;font-weight:700;display:flex;align-items:center;gap:8px}
+  .card h2 i{width:26px;height:26px;border-radius:7px;background:#2a3142;display:inline-flex;align-items:center;justify-content:center;color:var(--primary);font-size:13px;font-weight:800}
+  .card .sub{color:var(--muted);font-size:11.5px;margin:2px 0 12px 34px}
+  .stats{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px;margin-bottom:12px}
+  .stat .k{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px}
+  .stat .v{font-size:24px;font-weight:700;margin-top:2px}
+  .stat .v small{font-size:12px;color:var(--muted);font-weight:500;margin-left:6px}
+  .card .btn{width:100%;text-align:center}
+  .arrows{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;max-width:1200px;height:40px}
+  .arrows div{position:relative}
+  .arrows div::after{content:"";position:absolute;left:70px;top:0;height:40px;border-left:2px dashed #3a4256}
+  .arrows div.second::after{left:40px}.arrows div.second::before{left:35px}.arrows div::before{content:"";position:absolute;left:65px;top:34px;border:6px solid transparent;border-top:8px solid #3a4256}
+  .transfers{display:grid;grid-template-columns:260px 260px;gap:22px;max-width:1200px}
+  .tcard{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+  .tcard h3{margin:0 0 8px 0;font-size:14px;display:flex;align-items:center;gap:8px}
+  .tcard h3 i{width:22px;height:22px;border-radius:6px;background:#2a3142;display:inline-block}
+  .tcard .row{display:flex;justify-content:space-between;align-items:baseline;padding:4px 0;color:var(--muted);font-size:12px}
+  .tcard .row b{color:#fff;font-size:20px}
+  .tcard .btn{margin-top:8px;width:100%;text-align:center}
+  .guide{margin-top:26px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px}
+  .guide header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+  .guide h2{margin:0;font-size:17px}
+  .guide header p{margin:2px 0 0 0;color:var(--muted);font-size:12px}
+  .scope{display:flex;gap:6px}
+  .scope span{padding:5px 10px;border-radius:6px;border:1px solid var(--line);font-size:12px;color:#cfd3dc}
+  .scope span.on{background:var(--primary);color:var(--primary-fg);border-color:var(--primary);font-weight:700}
+  .kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:14px}
+  .kpi{background:var(--card-2);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+  .kpi .k{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+  .kpi .v{font-size:22px;font-weight:700;margin-top:2px}
+  .kpi .n{font-size:11px;color:var(--muted);margin-top:2px}
+  .kpi.crit .v{color:var(--destructive)} .kpi.warn .n b{color:var(--warning)}
+  table{width:100%;border-collapse:collapse;font-size:12.5px}
+  th{color:var(--muted);font-weight:600;text-align:left;padding:7px 8px;border-bottom:1px solid var(--line);font-size:11.5px}
+  td{padding:7px 8px;border-bottom:1px solid #202636;white-space:nowrap;font-variant-numeric:tabular-nums}
+  td.num,th.num{text-align:right}
+  .st{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700}
+  .st.c{background:rgba(203,90,77,.18);color:#ff9a8e} .st.w{background:rgba(209,156,71,.18);color:#ffcc7a} .st.o{background:rgba(103,162,107,.18);color:#9ad99e} .st.n{background:#262c3a;color:#aeb4c2}
+  .buy{color:var(--primary);font-weight:700}
+  .dim{color:#6f7585}
+  tr.open td{background:#1b2030}
+  .why{white-space:normal;background:#141823;border:1px solid var(--line);border-radius:8px;padding:12px 14px 12px 14px;margin:0 8px 10px 8px;display:grid;grid-template-columns:1.25fr 1fr;gap:18px}
+  .why h4{margin:0 0 8px 0;font-size:12.5px;color:var(--primary);letter-spacing:.3px}
+  .why ol{margin:0;padding-left:18px;line-height:1.75;font-size:12.5px}
+  .why ol b{font-variant-numeric:tabular-nums}
+  .why .src{color:var(--muted);font-size:11px}
+  .why .params{display:grid;grid-template-columns:1fr 1fr;gap:4px 14px;font-size:12px}
+  .why .params span{color:var(--muted)} .why .params b{font-weight:600}
+  .why .verdict{margin-top:10px;padding:8px 10px;border-radius:6px;background:rgba(209,156,71,.12);border:1px solid rgba(209,156,71,.35);font-size:12.5px}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside>
+    <div class="brand"><i></i>StockSync</div>
+    <a class="active" href="#">Command Panel</a>
+    <div class="sec">AWD</div>
+    <a class="sub" href="#">AWD Purchase Guide</a>
+    <a class="sub" href="#">AWD Stock Parameters</a>
+    <a class="sub" href="#">AWD Orders</a>
+    <a href="#">Amazon <span>›</span></a>
+    <a href="#">Shopify <span>›</span></a>
+    <a href="#">Target <span>›</span></a>
+    <a href="#">Walmart <span>›</span></a>
+    <div class="sec">TOOLS</div>
+    <a href="#">Holiday Calendar</a>
+    <a href="#">Documentation</a>
+    <a href="#">Admin Panel</a>
+    <a href="#">Manage Email Reports</a>
+    <div class="foot">planner@demo-brand.com</div>
+  </aside>
+  <main>
+    <div class="top">
+      <div><h1>Command Panel</h1><p>Central warehouse distribution control · velocity window: seasonal (last year, same months)</p></div>
+      <div class="ctl"><span class="chk"><i></i> Only Active</span><span class="btn">⟳ Refresh</span></div>
+    </div>
+
+    <section class="flow">
+      <div class="card"><h2><i>A</i>AWD</h2><div class="sub">Central inventory · Amazon Warehousing &amp; Distribution</div>
+        <div class="stats"><div class="stat"><div class="k">Active SKUs</div><div class="v">64</div></div><div class="stat"><div class="k">Need purchase</div><div class="v">11</div></div><div class="stat"><div class="k">Units to buy</div><div class="v">18.4K</div><div class="n" style="font-size:11px;color:var(--muted)">331 cases · 19 pallets</div></div><div class="stat"><div class="k">Critical / Warning</div><div class="v"><span style="color:var(--destructive)">4</span> <span style="color:var(--warning);font-size:18px">/ 1</span></div></div></div>
+        <span class="btn primary">View purchase orders</span></div>
+      <div class="card"><h2><i>T</i>TARGET</h2><div class="sub">Retail marketplace · DC replenishment</div>
+        <div class="stats"><div class="stat"><div class="k">Active SKUs</div><div class="v">5</div></div><div class="stat"><div class="k">Need purchase</div><div class="v">1</div></div><div class="stat"><div class="k">Units to buy</div><div class="v">24.0K</div><div class="n" style="font-size:11px;color:var(--muted)">500 cases · 28 pallets</div></div><div class="stat"><div class="k">Critical / Warning</div><div class="v"><span style="color:var(--destructive)">1</span> <span style="color:var(--warning);font-size:18px">/ 0</span></div></div></div>
+        <span class="btn primary">View purchase orders</span></div>
+      <div class="card"><h2><i>W</i>WALMART</h2><div class="sub">Retail marketplace · distributor</div>
+        <div class="stats"><div class="stat"><div class="k">Active SKUs</div><div class="v">7</div></div><div class="stat"><div class="k">Need purchase</div><div class="v">0</div></div><div class="stat"><div class="k">Units to buy</div><div class="v">0</div><div class="n" style="font-size:11px;color:var(--muted)">nothing to buy today</div></div><div class="stat"><div class="k">Critical / Warning</div><div class="v"><span style="color:var(--success)">0</span> <span style="color:var(--warning);font-size:18px">/ 0</span></div></div></div>
+        <span class="btn">View purchase orders</span></div>
+    </section>
+    <section class="arrows"><div></div><div class="second"></div><div style="visibility:hidden"></div></section>
+    <section class="transfers">
+      <div class="tcard"><h3><i></i>SHOPIFY · transfer from AWD</h3><div class="row"><span>Units needed</span><b>3,140</b></div><div class="row"><span>SKUs to transfer</span><b>4</b></div><div class="row"><span>Next order window</span><b style="font-size:14px">Nov 8</b></div><span class="btn">View transfers</span></div>
+      <div class="tcard"><h3><i></i>AMAZON FBA · transfer from AWD</h3><div class="row"><span>Units needed</span><b>2,410</b></div><div class="row"><span>SKUs to transfer</span><b>3</b></div><div class="row"><span>Next order window</span><b style="font-size:14px">Nov 4 · every 7 d</b></div><span class="btn">View transfers</span></div>
+    </section>
+
+    <section class="guide">
+      <header><div><h2>AWD Purchase Guide</h2><p>What to order from the AWD network today: units, cases and pallets, and the math behind each number. Cadence every 27 d · next window Nov 24.</p></div>
+        <div class="scope"><span class="on">Needs order (11)</span><span>All SKUs (64)</span><span>Critical only</span></div></header>
+      <div class="kpis">
+        <div class="kpi"><div class="k">Lines to buy</div><div class="v">11</div><div class="n">of 64 active SKUs</div></div>
+        <div class="kpi"><div class="k">Units to buy</div><div class="v">18,420</div><div class="n">"Active only" hides 12 discontinued (28 units)</div></div>
+        <div class="kpi"><div class="k">Master cases</div><div class="v">331</div><div class="n">1 SKU without a case size</div></div>
+        <div class="kpi"><div class="k">Pallets</div><div class="v">19</div><div class="n">1 container</div></div>
+        <div class="kpi crit"><div class="k">Critical</div><div class="v">4</div><div class="n"><b>1 Warning</b> · 6,870 units involved</div></div>
+        <div class="kpi"><div class="k">Blocked lines</div><div class="v">2</div><div class="n">missing case size or lead time · 1,940 units held</div></div>
+      </div>
+      <table>
+        <thead><tr><th>SKU</th><th>Status</th><th class="num">Velocity/day</th><th class="num">On hand</th><th class="num">On order</th><th class="num">DOS</th><th class="num">Proj. DOS at ETA</th><th>Order by</th><th class="num">Days left</th><th class="num">Buy units</th><th class="num">Cases</th><th class="num">Pallets</th><th>Ready</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </section>
+  </main>
+</div>
+<script>
+const rows = [
+  {sku:"NW-KNEE-L", st:"c", v:41.6, oh:1340, oo:0, dos:32, pd:14, ob:"Oct 29", dl:-4, buy:7920, cs:165, pl:9, ready:"✓", open:true},
+  {sku:"NW-ANKL-M", st:"c", v:22.1, oh:980, oo:0, dos:44, pd:21, ob:"Nov 3", dl:1, buy:3360, cs:70, pl:4, ready:"✓"},
+  {sku:"NW-HEAD-OS", st:"c", v:18.4, oh:1010, oo:600, dos:55, pd:38, ob:"Nov 6", dl:4, buy:2880, cs:60, pl:3, ready:"✓"},
+  {sku:"NW-BACK-XL", st:"c", v:9.7, oh:470, oo:0, dos:48, pd:26, ob:"Nov 7", dl:5, buy:1200, cs:25, pl:2, ready:"—  no lead time"},
+  {sku:"NW-WRST-S", st:"w", v:12.3, oh:1510, oo:0, dos:123, pd:67, ob:"Nov 21", dl:19, buy:1440, cs:30, pl:2, ready:"✓"},
+  {sku:"NW-ELBW-M", st:"o", v:7.9, oh:1910, oo:0, dos:242, pd:171, ob:"Dec 2", dl:30, buy:720, cs:15, pl:1, ready:"✓"},
+  {sku:"NW-NECK-OS", st:"o", v:5.2, oh:1480, oo:0, dos:285, pd:214, ob:"Dec 9", dl:37, buy:480, cs:10, pl:1, ready:"— no case size"},
+  {sku:"NW-CALF-L", st:"o", v:3.1, oh:1060, oo:0, dos:342, pd:271, ob:"Dec 15", dl:43, buy:420, cs:"—", pl:"—", ready:"✓"},
+];
+const label={c:"Critical",w:"Warning",o:"OK",n:"No velocity"};
+const f=n=>typeof n==="number"?n.toLocaleString("en-US"):n;
+document.getElementById("rows").innerHTML = rows.map(r=>{
+  const tr=`<tr class="${r.open?"open":""}"><td><b>${r.open?"▾ ":"▸ "}${r.sku}</b></td><td><span class="st ${r.st}">${label[r.st]}</span></td><td class="num">${r.v.toFixed(1)}</td><td class="num">${f(r.oh)}</td><td class="num">${r.oo?f(r.oo):'<span class="dim">0</span>'}</td><td class="num">${r.dos} d</td><td class="num">${r.pd} d</td><td>${r.ob}</td><td class="num" style="color:${r.dl<0?"var(--destructive)":"inherit"}">${r.dl<0?r.dl+" (late)":r.dl}</td><td class="num buy">${f(r.buy)}</td><td class="num">${f(r.cs)}</td><td class="num">${f(r.pl)}</td><td>${r.ready}</td></tr>`;
+  if(!r.open) return tr;
+  return tr+`<tr><td colspan="13" style="padding:0"><div class="why">
+    <div><h4>WHY 7,920 UNITS · the math, parcel by parcel</h4>
+      <ol>
+        <li>Demand to cover: last year's sales over the coverage window <b>Nov 3 → May 20</b> (198 d = lead 70 + safety 60 + cadence 27 + holiday buffer 41) = <b>8,640</b> units <span class="src">· ORDER_UP_TO_UNITS</span></li>
+        <li>Growth adjustment <b>× 1.08</b> (YTD vs LY, same channel) → <b>9,331</b> <span class="src">· SEASONAL_GROWTH_RATIO</span></li>
+        <li>Minus stock on hand across the network <b>− 1,340</b> (FBA 610 · AWD 580 · Main 150) <span class="src">· AVAILABLE_UNITS</span></li>
+        <li>Minus purchase orders arriving within the lead time <b>− 0</b> <span class="src">· ON_ORDER_WITHIN_LT</span></li>
+        <li>Base needed <b>7,991</b> → rounded to master cases of 48 → <b>7,920 units = 165 cases = 9 pallets</b>; MOQ 2,000 satisfied <span class="src">· RECOMMENDED_QTY_FINAL</span></li>
+      </ol>
+      <div class="verdict"><b>Critical.</b> Days of stock 32 ≤ safety stock 60. Order was due <b>Oct 29</b> (4 days late): at 41.6 units/day the network runs out <b>Dec 4</b>, 36 days before a PO placed today would land (ETA <b>Jan 9</b>, lead time 70 d). Projected days of stock at ETA: <b>14</b>.</div>
+    </div>
+    <div><h4>PARAMETERS THIS SKU USED</h4>
+      <div class="params"><span>Family</span><b>Knee Sleeve</b><span>SKU status</span><b>Active</b><span>Velocity</span><b>41.6 / day</b><span>Window used</span><b>Nov 3, 2025 → May 20, 2026</b><span>Window source</span><b>CONFIGURED (198 d)</b><span>Safety stock</span><b>60 d</b><span>Lead time</span><b>70 d</b><span>Purchase frequency</span><b>27 d · Mondays</b><span>Case size</span><b>48 units</b><span>Cases per pallet</span><b>18</b><span>MOQ</span><b>2,000 units</b><span>Holidays in window</span><b>Black Friday, Christmas, CNY (+41 d)</b></div>
+      <p class="src" style="margin:10px 0 0 0">Every figure is read from the Gold table of the contract (inventory-needs v2); nothing is recalculated in the browser. Edit parameters → AWD Stock Parameters.</p>
+    </div></div></td></tr>`;
+}).join("");
+</script>
+</body>
+</html>
