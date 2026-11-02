@@ -1,7 +1,47 @@
 # Requirements and design thinking: how a need becomes a solution
 
 The method I use to turn a stakeholder's need into a data product people adopt. Each stage names the artifact it
-produces and the example from my work that shows it.
+produces and the example from my work that shows it. CS-07's design track expands stage 3 into audit, information
+architecture, boards and design system; the playbook's delivery loop runs inside stage 4.
+
+```mermaid
+%%{init: {"theme":"base","themeVariables":{"primaryColor":"#13223a","primaryTextColor":"#eef2f8","primaryBorderColor":"#2bc4dd","lineColor":"#7f8da6","secondaryColor":"#0f1b2e","tertiaryColor":"#1d2d48","clusterBkg":"#f3f6fb","clusterBorder":"#c7d0e0","titleColor":"#0f1b2e","fontFamily":"Segoe UI, Helvetica, Arial, sans-serif","fontSize":"14px"}}}%%
+flowchart LR
+    classDef human  fill:#2a1a3a,stroke:#b48cf2,color:#efe6ff
+    classDef gate   fill:#102a1f,stroke:#2ecc71,color:#d7ffe6
+    classDef store  fill:#1d2d48,stroke:#9aa6bb,color:#eef2f8
+    classDef serve  fill:#3a1a2a,stroke:#ec4899,color:#ffe1ee
+
+    subgraph A["1 · Discover"]
+        OBS["Field notes<br/>measured baseline"]:::human
+        Q["Open questions<br/>with an owner"]:::store
+    end
+    subgraph B["2 · Define"]
+        US["User stories<br/>by role"]:::human
+        AC{{"Acceptance criteria<br/>EARS, each names its test"}}:::gate
+        CT[("Contract<br/>columns · semantics · SemVer")]:::store
+    end
+    subgraph C["3 · Design"]
+        H["Hierarchy<br/>10 s · 2 min · 20 min"]:::human
+        BD["Boards and tokens"]:::human
+        DD[("design.md<br/>patterns named")]:::store
+    end
+    subgraph D["4 · Build"]
+        W["Tasks in waves<br/>PRs under the gates"]:::store
+    end
+    subgraph V["5 · Validate"]
+        SR{{"SQL × render<br/>zero-diff · four widths"}}:::gate
+        TR["Review triage<br/>4 outcomes"]:::human
+    end
+    subgraph E["6 · Operate"]
+        OUT["Weekly push · cost monitor<br/>adoption numbers"]:::serve
+    end
+
+    OBS --> Q --> US --> AC --> H --> BD --> DD --> W --> SR --> TR --> OUT
+    AC --> CT --> DD
+    TR -.->|points accepted| DD
+    OUT -.->|what people actually use| OBS
+```
 
 ## 1. Discover: watch what people actually do
 
@@ -50,11 +90,11 @@ produces and the example from my work that shows it.
 
 - **SQL × render**: the aggregate the warehouse says, next to what the page renders, per channel, before the
   page is called done.
-- **A recorded walk-through**, then a triage table: each point with the timestamp, what the stakeholder said,
-  our reading, the decision (accept, accept with a change, decline with the reason, defer) and where the design
-  changes. Forty-one points: 24 accepted, 11 accepted with a change, 3 declined, 3 deferred. Declining with a
+- **A recorded walk-through of the mock** (on the property page, my own), then a triage table: each point with the timestamp, what was said,
+  the reading against the product's rules, the decision (accept, accept with a change, decline with the reason,
+  defer) and where the design changes. Forty-one points: 24 accepted, 11 accepted with a change, 3 declined, 3 deferred. Declining with a
   reason is part of the method; so is naming the product rules the mock itself had broken.
-- **Accessibility and first paint** measured (contrast fixes, 0.85 s first paint in production), four widths,
+- **Accessibility and first paint** measured (contrast fixes, 0.85 s first paint on a production build), four widths,
   two themes.
 
 ## 6. Operate: adoption, distribution, cost

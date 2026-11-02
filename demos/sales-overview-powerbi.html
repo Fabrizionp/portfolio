@@ -4,173 +4,210 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Sales Overview · Power BI design</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <style>
   :root{
-    --navy:#0f1b2e; --navy-2:#13223a; --panel:#0c1627; --rail:#0b1424;
-    --tile:#c9ced8; --tile-text:#15213a; --muted:#9aa6bb; --text:#eef2f8;
-    --green:#2ecc71; --lime:#7ed321; --purple:#b48cf2; --cyan:#2bc4dd; --blue:#4c8cf5;
-    --accent:#2d7bff;
+    --bg:#e9ecf1; --bg2:#dde2ea; --navy:#0f2238; --navy-2:#13293f; --ink:#0f2238; --muted:#5f6b80; --text:#eef2f8;
+    --tile:#e4e8ef; --tile-sub:#c9cfd9; --green:#2ecc71; --lime:#7ed321; --purple:#b48cf2; --cyan:#2bc4dd; --blue:#4c8cf5;
+    --sel:#1f5fa8; --btn:#8a94a6; --bar:#22c55e; --up:#19a74a; --down:#e03131;
   }
   *{box-sizing:border-box}
-  html,body{margin:0;background:var(--navy);color:var(--text);font-family:"Segoe UI",system-ui,-apple-system,Arial,sans-serif}
-  .app{display:grid;grid-template-columns:176px 1fr;width:1750px;min-height:1000px}
-  .rail{background:var(--rail);padding:28px 0;display:flex;flex-direction:column;gap:34px;align-items:center}
-  .rail .brand{font-weight:800;color:#3b8cff;letter-spacing:.5px;font-size:20px;display:flex;align-items:center;gap:6px}
-  .rail .brand .home{width:14px;height:12px;border:2px solid #3b8cff;border-top-left-radius:2px;border-top-right-radius:2px;position:relative;top:1px}
-  .rail a{color:#55617a;font-weight:800;letter-spacing:1.5px;font-size:22px;text-decoration:none}
-  .rail a.active{color:#fff}
-  main{padding:26px 30px 24px 30px;display:grid;grid-template-rows:auto auto auto auto;gap:16px}
-  header{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:26px}
-  header h1{margin:0;font-size:34px;font-weight:900;letter-spacing:1px}
-  header .period{background:var(--navy-2);border-radius:14px;height:56px;display:flex;align-items:center;padding:0 22px;color:var(--muted);font-size:15px;gap:18px}
-  header .period b{color:#fff}
-  header .logo{background:#e9edf3;color:#2b3a55;border-radius:12px;padding:10px 20px;font-weight:800;font-size:22px;letter-spacing:.5px;display:flex;align-items:center;gap:10px}
-  header .logo .mark{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#2bc4dd,#4c8cf5)}
-  .kpis{display:grid;grid-template-columns:repeat(5,1fr) 330px;gap:22px}
-  .tile{background:var(--tile);border-radius:12px;height:126px;position:relative;overflow:hidden;color:var(--tile-text);padding:14px 16px}
-  .tile::before{content:"";position:absolute;left:0;right:0;top:0;height:9px;background:var(--c)}
-  .tile .t{font-weight:700;font-size:15px;margin-top:2px}
-  .tile .v{font-weight:800;font-size:30px;margin-top:10px;letter-spacing:-.5px}
-  .tile .d{font-size:13px;margin-top:4px;color:#3b4a66}
-  .tile .d b{color:#1f8f4e}
-  .tile .d b.neg{color:#c0392b}
-  .filters{background:var(--panel);border-radius:12px;padding:14px 16px}
-  .filters h3{margin:0 0 10px 0;font-size:14px;letter-spacing:1px;font-weight:800}
-  .filters .f{display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted);padding:5px 0;border-bottom:1px solid #1c2b45}
-  .filters .f b{color:#dfe6f3;font-weight:600}
-  .grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}
-  .panel{background:var(--panel);border-radius:12px;position:relative;overflow:hidden;padding:46px 18px 14px 18px}
-  .panel::before{content:"";position:absolute;left:0;right:0;top:0;height:30px;background:linear-gradient(180deg,#5c6b85,#223148)}
-  .panel h2{position:absolute;top:6px;left:18px;margin:0;font-size:14px;font-weight:800;letter-spacing:.6px;color:#f3f6fb}
-  .panel .legend{position:absolute;top:8px;right:18px;font-size:12px;color:#dfe6f3;display:flex;gap:14px}
-  .legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+  html,body{margin:0;background:
+      radial-gradient(circle at 12% 18%, #f4f6f9 0 9%, transparent 10%),
+      radial-gradient(circle at 70% 60%, #f1f3f7 0 14%, transparent 15%),
+      radial-gradient(circle at 38% 82%, #f4f6f9 0 11%, transparent 12%),
+      radial-gradient(circle at 88% 22%, #f0f2f6 0 8%, transparent 9%),
+      var(--bg);color:var(--ink);font-family:"Segoe UI",system-ui,-apple-system,Arial,sans-serif;font-size:13px}
+  .app{display:grid;grid-template-columns:92px 1fr;width:1750px;min-height:1000px}
+  .rail{background:#f7f8fa;border-right:1px solid #d3d9e3;display:flex;flex-direction:column;align-items:center;gap:26px;padding:16px 0}
+  .rail .mark{width:52px;height:52px;border-radius:10px;background:linear-gradient(135deg,#1f5fa8,#2bc4dd);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:20px}
+  .rail .ic{width:44px;height:44px;border-radius:8px;background:#ffffff;border:1px solid #d3d9e3;display:flex;align-items:center;justify-content:center;color:#3b4a66;font-size:18px}
+  .rail .ic.on{background:#fff;border-color:#1f5fa8;color:#1f5fa8;box-shadow:inset 0 0 0 2px #1f5fa833}
+  .rail .lnk{margin-top:auto;font-size:11px;color:#fff;background:#3b4a66;padding:6px 10px;border-radius:6px}
+  main{padding:12px 18px 14px 18px;display:grid;grid-template-rows:auto auto auto auto auto;gap:10px}
+  header{display:grid;grid-template-columns:1fr auto auto auto;align-items:center;gap:26px}
+  header h1{margin:0;font-size:38px;font-weight:900;letter-spacing:.5px;color:var(--ink)}
+  .tog{display:flex;flex-direction:column;align-items:center;gap:6px}
+  .tog .lbl{font-weight:700;font-size:15px;color:var(--ink)}
+  .tog .btns{display:flex;gap:8px}
+  .btn{background:var(--btn);color:#fff;border-radius:4px;padding:9px 18px;font-weight:600;font-size:13px;min-width:112px;text-align:center}
+  .btn.on{background:var(--navy);box-shadow:0 2px 0 #0a1626}
+  .brand{background:#fff;border:1px solid #d3d9e3;border-radius:10px;padding:8px 18px;font-weight:800;font-size:22px;color:#1f5fa8;display:flex;align-items:center;gap:10px}
+  .brand i{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#2bc4dd,#1f5fa8);display:inline-block}
+  .kpis{display:grid;grid-template-columns:repeat(5,1fr) 440px;gap:12px}
+  .tile{background:var(--tile);border-radius:10px;position:relative;overflow:hidden;padding:12px 14px 10px 14px;min-height:176px}
+  .tile::before{content:"";position:absolute;left:0;right:0;top:0;height:8px;background:var(--c)}
+  .tile .t{font-weight:800;font-size:15px;margin-top:4px;max-width:62%}
+  .tile .t small{display:block;font-weight:700;font-size:11px;color:#3b4a66}
+  .tile .v{font-weight:700;font-size:26px;margin-top:4px}
+  .tile .d{font-size:11.5px;color:#3b4a66;margin-top:4px;font-style:italic}
+  .tile .d b{font-style:normal;color:var(--up)} .tile .d b.neg{color:var(--down)}
+  .tile .s{font-size:11.5px;color:#3b4a66;margin-top:3px}
+  .tile .s b{color:var(--up)} .tile .s b.neg{color:var(--down)}
+  .tile .lm{background:var(--tile-sub);border-radius:6px;padding:7px 10px;margin-top:8px;font-size:11px;color:#2b3a55;font-style:italic;line-height:1.5;width:72%}
+  .tile .lm b{font-weight:700}
+  .tile .ico{position:absolute;right:12px;bottom:10px;font-size:34px;opacity:.9}
+  .tile .side{position:absolute;right:10px;top:14px;background:var(--tile-sub);border-radius:6px;padding:6px 8px;font-size:10.5px;color:#2b3a55;font-style:italic;max-width:88px;text-align:center}
+  .filters{background:var(--navy);border-radius:10px;padding:12px 14px;color:var(--text)}
+  .filters .h{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+  .filters h3{margin:0;font-size:20px;font-weight:700}
+  .filters .cf{background:#fff;color:var(--ink);border-radius:4px;padding:6px 12px;font-weight:700;font-size:12px}
+  .filters .row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px}
+  .filters .row.three{grid-template-columns:repeat(3,1fr)}
+  .fb{background:#15304d;border-radius:4px;padding:14px 0;text-align:center;font-weight:700;font-size:13px;color:#fff}
+  .fb.on{background:var(--sel)}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .panel{background:var(--navy);border-radius:8px;overflow:hidden;color:var(--text);position:relative}
+  .panel .cap{background:#dfe4ec;color:var(--ink);text-align:center;font-weight:600;font-size:14px;padding:4px 0}
+  .legend{position:absolute;left:14px;top:38px;font-size:12px;display:flex;gap:16px;align-items:center;color:#dfe6f3}
+  .legend .dot{display:inline-block;width:12px;height:12px;border-radius:50%;background:#2d7bff;margin-right:6px;vertical-align:-2px}
+  .legend .line{display:inline-block;width:22px;border-top:2px solid #cfd8e6;margin-right:6px;vertical-align:3px}
   svg text{font-family:"Segoe UI",system-ui,Arial,sans-serif}
-  table{width:100%;border-collapse:collapse;font-size:12.5px}
-  th{color:var(--muted);text-align:left;font-weight:600;padding:4px 6px;border-bottom:1px solid #1c2b45}
-  td{padding:5px 6px;border-bottom:1px solid #15223a;white-space:nowrap}
-  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
-  .bar{height:8px;border-radius:4px;background:var(--cyan);display:inline-block;vertical-align:middle}
-  .pill{display:inline-block;padding:1px 7px;border-radius:9px;font-size:11px;font-weight:700}
-  .pill.up{background:#123b2a;color:#4fe3a1}
-  .pill.down{background:#3b1a1a;color:#ff8a80}
+  .three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0}
+  .three > div{padding:8px 10px 6px 10px}
+  .three > div + div{border-left:1px solid #1e3550}
+  .hb{margin:7px 0 0 0}
+  .hb .r{display:grid;grid-template-columns:1fr;gap:3px;margin-bottom:9px}
+  .hb .lab{font-size:10.5px;font-weight:600;display:flex;gap:6px;align-items:center;white-space:nowrap}
+  .hb .lab .g{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--bar)} .hb .lab .g.neg{background:#e03131}
+  .hb .bar{height:6px;background:#1e3550;border-radius:2px;overflow:hidden}
+  .hb .bar i{display:block;height:100%;background:var(--bar)}
+  table{width:100%;border-collapse:collapse;font-size:11.5px}
+  th{background:var(--navy-2);color:#fff;text-align:left;padding:7px 8px;font-weight:700;border-bottom:1px solid #2b4664;white-space:nowrap}
+  th.num,td.num{text-align:right;font-variant-numeric:tabular-nums}
+  td{padding:6px 8px;background:#fff;color:var(--ink);border-bottom:1px solid #e3e8ef;white-space:nowrap}
+  td.k{background:var(--navy-2);color:#fff;font-weight:700}
+  td.k::before{content:"⊞ ";color:#9fb3cc;font-weight:400}
+  tr.tot td{font-weight:700;background:#f3f6fb} tr.tot td.k{background:var(--navy-2)}
+  .geo{position:relative}
+  .geo .tabs{position:absolute;top:8px;right:10px;z-index:500;display:flex;gap:8px}
+  .geo .tabs span{background:#15304d;color:#fff;border-radius:4px;padding:8px 24px;font-weight:600;font-size:13px}
+  .geo .tabs span.on{background:var(--sel)}
+  #map{height:330px;background:#0b1626}
+  .geo .note{position:absolute;left:12px;bottom:8px;z-index:500;background:#0f2238cc;color:#dfe6f3;font-size:11px;padding:4px 8px;border-radius:4px}
+  .foot{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:end}
+  .stores .lbl{font-weight:700;font-size:16px;text-align:center;margin-bottom:6px}
+  .stores .btns{display:flex;gap:8px}
+  .stores .btn{flex:1;font-size:11.5px;min-width:0;padding:11px 6px}
+  .tabsr{display:flex;gap:10px;justify-content:flex-start;align-items:flex-end}
+  .tabsr .btn{min-width:170px;padding:12px 14px;font-size:14px;border-radius:8px}
+  .meta{margin-left:auto;text-align:right;font-weight:600;font-size:14px;color:var(--ink);line-height:1.5}
+  .dbo{font-weight:700;font-size:13px;margin-top:4px}
 </style>
 </head>
 <body>
 <div class="app">
   <nav class="rail">
-    <div class="brand"><span class="home"></span>SUMMARY</div>
-    <a class="active" href="#">HOME</a>
-    <a href="#">AMAZON</a>
-    <a href="#">SHOPIFY</a>
-    <a href="#">TARGET</a>
-    <a href="#">WALMART</a>
+    <div class="mark">NW</div>
+    <div class="ic on">⌂</div><div class="ic">✕</div><div class="ic">▣</div><div class="ic">◫</div><div class="ic">⚙</div><div class="ic">▤</div><div class="ic">◎</div><div class="ic">✚</div>
+    <div class="lnk">Marketplace</div><div class="lnk">Website</div>
   </nav>
   <main>
     <header>
-      <h1>SALES OVERVIEW</h1>
-      <div class="period">Period <b>Jan 1 – Oct 31, 2026</b> · Compare <b>same period 2025</b> · Refreshed <b>Nov 2, 06:12 UTC</b></div>
-      <div class="logo"><span class="mark"></span>Northwind Wellness</div>
+      <h1>SALES OVERVIEW: GENERAL</h1>
+      <div class="tog"><span class="lbl">Analytical View</span><div class="btns"><span class="btn on">Hourly</span><span class="btn">Bar Chart</span><span class="btn">Heat Map</span></div></div>
+      <div class="tog"><span class="lbl">Order Status</span><div class="btns"><span class="btn on">COMPLETE</span><span class="btn">PENDING</span></div></div>
+      <div class="brand"><i></i>Northwind Outdoor</div>
     </header>
 
     <section class="kpis" id="kpis"></section>
 
-    <section class="grid">
-      <div class="panel"><h2>NET SALES BY MONTH · 2026 vs 2025</h2>
-        <div class="legend"><span><i style="background:var(--cyan)"></i>2026</span><span><i style="background:#44546f"></i>2025</span></div>
-        <svg id="c1" width="100%" height="330" viewBox="0 0 740 330"></svg>
+    <section class="row2">
+      <div class="panel"><div class="cap">Sales ($) / Hourly</div>
+        <div class="legend"><span><span class="dot"></span>AVG MTD</span><span><span class="line"></span>AVG LM</span></div>
+        <svg id="hourly" width="100%" height="290" viewBox="0 0 840 290"></svg>
       </div>
-      <div class="panel"><h2>NET SALES BY CHANNEL · share and growth</h2>
-        <svg id="c2" width="100%" height="330" viewBox="0 0 740 330"></svg>
+      <div class="panel three">
+        <div><div class="cap">Sales ($) / Category</div><div class="hb" id="hb1"></div></div>
+        <div><div class="cap">Sales ($) / Fulfilled By</div><div class="hb" id="hb2"></div></div>
+        <div><div class="cap">Sales ($) / Brand</div><div class="hb" id="hb3"></div></div>
       </div>
     </section>
-    <section class="grid">
-      <div class="panel"><h2>TOP 10 SKUs · net sales, units, margin</h2>
-        <div id="t1"></div>
+
+    <section class="row2" style="grid-template-columns:1fr 0.62fr 0.42fr">
+      <div class="panel"><div class="cap">Product Performance / MTD</div><div id="t1"></div></div>
+      <div class="panel"><div class="cap">Customer Overview / MTD</div><div id="t2"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:8px 10px 10px 10px;font-size:11px;font-weight:700">
+          <div>STATE<div style="background:#fff;color:#0f2238;border-radius:3px;padding:5px 8px;margin-top:4px;font-weight:600">All ▾</div></div>
+          <div>CITY<div style="background:#fff;color:#0f2238;border-radius:3px;padding:5px 8px;margin-top:4px;font-weight:600">All ▾</div></div>
+          <div>ZIP CODE<div style="background:#fff;color:#0f2238;border-radius:3px;padding:5px 8px;margin-top:4px;font-weight:600">All ▾</div></div>
+        </div>
       </div>
-      <div class="panel"><h2>ORDERS AND UNITS BY WEEK · last 26 weeks</h2>
-        <div class="legend"><span><i style="background:var(--purple)"></i>Orders</span><span><i style="background:var(--cyan)"></i>Units</span></div>
-        <svg id="c3" width="100%" height="330" viewBox="0 0 740 330"></svg>
-      </div>
+      <div class="panel geo"><div class="tabs"><span>Geographic</span><span class="on">Customer</span></div><div id="map"></div><div class="note">Net sales by customer location · bubble = MTD net sales</div></div>
+    </section>
+
+    <section class="foot">
+      <div class="stores"><div class="lbl">STORE</div><div class="btns"><span class="btn on">NORTHWIND OUTDOOR</span><span class="btn">RIDGEWAY SUPPLY</span><span class="btn on">TRAILHEAD DIRECT</span><span class="btn on">BASECAMP GEAR</span><span class="btn">SUMMIT WHOLESALE</span></div></div>
+      <div class="tabsr"><span class="btn on">GENERAL</span><span class="btn">FIRST TIME PERIOD</span><span class="btn">FIRST TIME</span>
+        <div class="meta">Last Update: 11/02/26 12:05:00<br>Last Order: 11/02/26 11:48:12<div class="dbo">* AVG DBO = Average Days Between Orders</div></div></div>
     </section>
   </main>
 </div>
 <script>
-// Deterministic synthetic data (seeded), so the screenshot is reproducible. No client data.
-let s = 20261102; const rnd = () => (s = (s * 1664525 + 1013904223) % 4294967296) / 4294967296;
-const fmt$ = n => "$" + Math.round(n).toLocaleString("en-US");
-const fmtK = n => n >= 1e6 ? (n/1e6).toFixed(2)+"M" : n >= 1e3 ? (n/1e3).toFixed(1)+"K" : String(Math.round(n));
+// Deterministic synthetic data (seeded). No client rows, no brand marks.
+let s=20261102; const rnd=()=>(s=(s*1664525+1013904223)%4294967296)/4294967296;
+const n=v=>Math.round(v).toLocaleString("en-US"); const $=v=>"$"+n(v);
 
-// KPIs
-const kpis = [
-  {t:"Net Sales ($)", v:"$8.42M", d:"+18.6 %", c:"var(--green)", pos:true},
-  {t:"Gross Profit ($)", v:"$3.91M", d:"+21.3 %", c:"var(--lime)", pos:true},
-  {t:"Orders", v:"214,380", d:"+14.9 %", c:"var(--purple)", pos:true},
-  {t:"Units", v:"402,115", d:"+16.2 %", c:"var(--cyan)", pos:true},
-  {t:"Customers", v:"168,940", d:"−2.1 %", c:"var(--blue)", pos:false},
+// KPI tiles, Power BI style: value, vs last month, a sub-metric, and the "Last Month" box
+const kpis=[
+ {c:"var(--green)",t:"Net Sales ($)",v:"214,860",d:"vs last month to date : <b>118.40% ▲</b>",s:"Avg Ticket: $334.67 <b>▲ $58.12</b>",lm:"<b>Last Month (full)</b><br>Net Sales: $3,120,440<br>Avg Ticket: $276.55",ico:"📊"},
+ {c:"var(--lime)",t:"Gross Profit ($)",v:"58,420",d:"vs last month to date : <b>131.22% ▲</b>",s:"Margin: 27.19% <b>▲ 2.15%</b>",lm:"<b>Last Month (full)</b><br>Gross Profit: $781,200<br>Margin: 25.04%",ico:"💰"},
+ {c:"var(--purple)",t:"Orders",v:"642",d:"vs last month to date : <b>76.40% ▲</b>",s:"Orders / Day: 321 <b class='neg'>▼ 42.9</b>",lm:"<b>Last Month (full)</b><br>Orders: 11,280<br>Orders / Day: 363.9",ico:"🛒",side:"Free S. Orders"},
+ {c:"var(--cyan)",t:"Shipping Revenue ($)",v:"12,910",d:"vs last month to date : <b>107.30% ▲</b>",s:"Shipping [$] / NS [$]: 6.01% <b>▲ 0.03%</b>",lm:"<b>Last Month (full)</b><br>Shipping Revenue: $186,700<br>Shipping [$] / NS [$]: 5.98%",ico:"🚚",side:"→ More Details"},
+ {c:"var(--blue)",t:"Gross Profit ($)<small>After Variable Cost</small>",v:"41,230",d:"vs last month to date : <b>124.90% ▲</b>",s:"Contribution Margin: 19.19% <b>▲ 0.88%</b>",lm:"<b>Last Month (full)</b><br>Profitability: $571,300<br>Contribution Margin: 18.31%",ico:"💲",side:"Breakeven Daily Revenue $98,400"},
 ];
-document.getElementById("kpis").innerHTML = kpis.map(k =>
-  `<div class="tile" style="--c:${k.c}"><div class="t">${k.t}</div><div class="v">${k.v}</div><div class="d">vs LY <b class="${k.pos?"":"neg"}">${k.d}</b></div></div>`
-).join("") + `<div class="filters"><h3>SALES FILTERS</h3>
-  <div class="f"><span>Date range</span><b>YTD 2026</b></div>
-  <div class="f"><span>Channel</span><b>All (4)</b></div>
-  <div class="f"><span>Brand</span><b>Northwind</b></div>
-  <div class="f"><span>SKU family</span><b>All (9)</b></div>
-  <div class="f"><span>Order status</span><b>Shipped, Delivered</b></div></div>`;
+document.getElementById("kpis").innerHTML=kpis.map(k=>`<div class="tile" style="--c:${k.c}"><div class="t">${k.t}</div><div class="v">${k.v}</div><div class="d">${k.d}</div><div class="s">${k.s}</div><div class="lm">${k.lm}</div>${k.side?`<div class="side">${k.side}</div>`:""}<div class="ico">${k.ico}</div></div>`).join("")+
+`<div class="filters"><div class="h"><h3>Sales Filters</h3><span class="cf">Custom Filters</span></div>
+ <div class="row three"><span class="fb">TODAY</span><span class="fb on">MTD</span><span class="fb">YTD</span></div>
+ <div class="row"><span class="fb on">$</span><span class="fb">G.P. ($)</span><span class="fb">Orders</span><span class="fb">Units</span></div></div>`;
 
-// Chart 1: monthly bars 2026 vs 2025 + line of margin
+// Hourly: AVG MTD (dots, dashed) vs AVG LM (dashed line)
 (function(){
-  const svg = document.getElementById("c1"); const W=740,H=330,L=56,R=16,T=18,B=40;
-  const months=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct"];
-  const ly=[520,490,610,640,700,760,690,720,780,830].map(v=>v*1000);
-  const ty=ly.map((v,i)=>v*(1.10+0.12*Math.sin(i/2)+rnd()*0.06));
-  const max=Math.max(...ty)*1.15; const x=i=>L+i*((W-L-R)/months.length); const bw=(W-L-R)/months.length;
-  let g=""; for(let k=0;k<=4;k++){const y=T+(H-T-B)*(1-k/4); g+=`<line x1="${L}" x2="${W-R}" y1="${y}" y2="${y}" stroke="#1d2d48"/><text x="${L-8}" y="${y+4}" fill="#9aa6bb" font-size="11" text-anchor="end">${fmtK(max*k/4)}</text>`;}
-  months.forEach((m,i)=>{const h1=(H-T-B)*ly[i]/max,h2=(H-T-B)*ty[i]/max;
-    g+=`<rect x="${x(i)+bw*0.14}" y="${H-B-h1}" width="${bw*0.32}" height="${h1}" fill="#44546f" rx="2"/>`;
-    g+=`<rect x="${x(i)+bw*0.5}" y="${H-B-h2}" width="${bw*0.32}" height="${h2}" fill="#2bc4dd" rx="2"/>`;
-    g+=`<text x="${x(i)+bw/2}" y="${H-B+18}" fill="#c7d0e0" font-size="12" text-anchor="middle">${m}</text>`;
-    g+=`<text x="${x(i)+bw*0.66}" y="${H-B-h2-6}" fill="#eef2f8" font-size="11" text-anchor="middle">${fmtK(ty[i])}</text>`;});
+  const svg=document.getElementById("hourly"); const W=840,H=290,L=24,R=18,T=54,B=44;
+  const hrs=[...Array(24).keys()];
+  const mtd=[1840,2210,980,1420,610,240,1310,3920,5260,8140,11730,9480,13020,10960,12480,9830,16540,9210,14060,10120,12370,11240,9060,3680];
+  const lm=mtd.map((v,i)=>Math.max(300, v*(0.55+0.25*Math.sin(i/3))*(0.9+rnd()*0.2)));
+  const max=20000; const x=i=>L+i*((W-L-R)/23), y=v=>T+(H-T-B)*(1-v/max);
+  let g=`<path d="M${lm.map((v,i)=>`${x(i)},${y(v)}`).join(" L")}" fill="none" stroke="#cfd8e6" stroke-width="1.5" stroke-dasharray="5 4"/>`;
+  g+=`<path d="M${mtd.map((v,i)=>`${x(i)},${y(v)}`).join(" L")}" fill="none" stroke="#2d7bff" stroke-width="1.5" stroke-dasharray="4 3"/>`;
+  mtd.forEach((v,i)=>{g+=`<circle cx="${x(i)}" cy="${y(v)}" r="4" fill="#2d7bff"/><text x="${x(i)}" y="${y(v)-9}" fill="#eef2f8" font-size="10.5" text-anchor="middle">${n(v)}</text>`;});
+  hrs.forEach(h=>{const lab=h===0?"12:00":(h%12||12)+":00"; const ap=h<12?"AM":"PM"; g+=`<text x="${x(h)}" y="${H-24}" fill="#dfe6f3" font-size="10.5" text-anchor="middle">${lab}</text><text x="${x(h)}" y="${H-10}" fill="#dfe6f3" font-size="10.5" text-anchor="middle">${ap}</text>`;});
   svg.innerHTML=g;
 })();
 
-// Chart 2: channel share (horizontal bars) with growth pills
+function hbars(id, rows, total){
+  const max=Math.max(...rows.map(r=>r[1]));
+  document.getElementById(id).innerHTML=rows.map(r=>{const pct=(r[1]/total*100).toFixed(2); const g=r[2];
+    return `<div class="r"><div class="lab"><span>${r[0]}</span><span>${n(r[1])}</span><span>(${pct}%)</span><span class="g ${g<0?"neg":""}"></span><span>${g>=0?"":"-"}${Math.abs(g).toFixed(2)}%</span></div><div class="bar"><i style="width:${Math.round(100*r[1]/max)}%"></i></div></div>`;}).join("");
+}
+const TOTAL=214860;
+hbars("hb1",[["Tents",118430,122.18],["Sleeping bags",41260,74.92],["Backpacks",27910,58.40],["Stoves",12480,101.33],["Hydration",9620,18.07],["Footwear",5160,-21.65]],TOTAL);
+hbars("hb2",[["Northwind Outdoor",171240,119.46],["Ridgeway Supply",24810,148.72],["Trailhead Direct",9630,41.08],["Basecamp Gear",5120,-9.84],["Summit Wholesale",3140,-5.20],["Partner drop-ship",920,-3.70]],TOTAL);
+hbars("hb3",[["Northline",46210,151.30],["Alpenglow",29840,169.12],["Kestrel Select",26130,88.47],["Fjell Premium",21980,174.06],["Cairn Supply",19460,203.90],["Summit Co.",17310,59.75]],TOTAL);
+
+// Product performance
 (function(){
-  const svg=document.getElementById("c2"); const W=740,H=330;
-  const rows=[["Amazon",4.21,"+15 %","#2bc4dd"],["Shopify",2.13,"+27 %","#4c8cf5"],["Target",1.28,"+9 %","#b48cf2"],["Walmart",0.80,"+41 %","#7ed321"]];
-  const max=4.6; let g=""; const top=34, rh=66, L=110, R=120;
-  rows.forEach((r,i)=>{const y=top+i*rh; const w=(W-L-R)*r[1]/max;
-    g+=`<text x="${L-14}" y="${y+22}" fill="#eef2f8" font-size="15" font-weight="700" text-anchor="end">${r[0]}</text>`;
-    g+=`<rect x="${L}" y="${y}" width="${W-L-R}" height="34" rx="6" fill="#152339"/>`;
-    g+=`<rect x="${L}" y="${y}" width="${w}" height="34" rx="6" fill="${r[3]}"/>`;
-    const lbl=`$${r[1].toFixed(2)}M · ${Math.round(r[1]/8.42*100)} %`;
-    g+= w>150 ? `<text x="${L+w-10}" y="${y+22}" fill="#0f1b2e" font-size="13" font-weight="800" text-anchor="end">${lbl}</text>` : `<text x="${L+w+10}" y="${y+22}" fill="#eef2f8" font-size="13" font-weight="800">${lbl}</text>`;
-    g+=`<text x="${W-R+16}" y="${y+22}" fill="#4fe3a1" font-size="13" font-weight="700">${r[2]} vs LY</text>`;});
-  g+=`<text x="${L}" y="${top+4*rh+10}" fill="#9aa6bb" font-size="12">Share of net sales YTD · growth vs the same period last year · one definition of net sales per channel (Gold)</text>`;
-  svg.innerHTML=g;
+  const rows=[["TENT-4S-2P",16920,4410,41,52,325],["BAG-DN-10",14380,2760,78,91,158],["PACK-65L",13740,3690,56,71,194],["STOVE-CAN",6840,1920,27,29,236],["RES-3L",6210,2340,25,25,248],["LAMP-600",5120,1130,19,31,165],["JKT-HS",4790,1260,18,34,141]];
+  const tot=rows.reduce((a,r)=>[a[0]+r[1],a[1]+r[2],a[2]+r[3],a[3]+r[4]],[0,0,0,0]);
+  document.getElementById("t1").innerHTML=`<table><thead><tr><th>Manufacturer SKU</th><th class="num">Net Sales ($) ▾</th><th class="num">GP ($)</th><th class="num">Orders</th><th class="num">Units</th><th class="num">Margin</th><th class="num">Price/Unit</th><th class="num">S. Revenue ($)</th></tr></thead><tbody>`+
+   rows.map(r=>`<tr><td class="k">${r[0]}</td><td class="num">${n(r[1])}</td><td class="num">${n(r[2])}</td><td class="num">${r[3]}</td><td class="num">${r[4]}</td><td class="num">${(r[2]/r[1]*100).toFixed(2)}%</td><td class="num">$${r[5]}</td><td class="num">${(r[1]*0.03+rnd()*400).toFixed(2)}</td></tr>`).join("")+
+   `<tr class="tot"><td class="k" style="padding-left:28px">Total</td><td class="num">214,860</td><td class="num">58,420</td><td class="num">642</td><td class="num">2,418</td><td class="num">27.19%</td><td class="num">$89</td><td class="num">12,910.00</td></tr></tbody></table>`;
+})();
+// Customers (synthetic names and masked e-mails)
+(function(){
+  const rows=[["j.lindqvist@ex…","J. Lindqvist",3620,910,2,19],["a.okafor@ex…","A. Okafor",2480,610,1,38],["p.moreau@ex…","P. Moreau",2210,540,1,7],["t.nakamura@ex…","T. Nakamura",2060,585,1,12],["c.alvarez@ex…","C. Alvarez",1890,470,1,9]];
+  document.getElementById("t2").innerHTML=`<table><thead><tr><th>CUSTOMER</th><th>NAME</th><th class="num">Net Sales ($) ▾</th><th class="num">GP ($)</th><th class="num">Orders</th><th class="num">Units</th><th class="num">DBO *</th></tr></thead><tbody>`+
+   rows.map(r=>`<tr><td class="k">${r[0]}</td><td>${r[1]}</td><td class="num">${n(r[2])}</td><td class="num">${n(r[3])}</td><td class="num">${r[4]}</td><td class="num">${r[5]}</td><td class="num">${r[5]}</td></tr>`).join("")+
+   `<tr class="tot"><td class="k" style="padding-left:28px">Total</td><td></td><td class="num">214,860</td><td class="num">58,420</td><td class="num">642</td><td class="num">2,418</td><td class="num">14</td></tr></tbody></table>`;
 })();
 
-// Table: top 10 SKUs
+// Map: Leaflet with dark CARTO tiles; bubbles at synthetic customer locations (US metro areas)
 (function(){
-  const fam=["Knee Sleeve","Ankle Wrap","Back Belt","Head Wrap","Wrist Support","Elbow Sleeve","Neck Pillow","Foot Roller","Shoulder Wrap","Calf Sleeve"];
-  const rows=fam.map((f,i)=>{const ns=620000*Math.pow(0.86,i)*(0.95+rnd()*0.1); const u=Math.round(ns/(21+rnd()*9)); const m=0.41+rnd()*0.12; const g=(rnd()*40-8); return {sku:`NW-${f.split(" ")[0].toUpperCase().slice(0,4)}-${["S","M","L","XL"][i%4]}`,f,ns,u,m,g};});
-  const max=rows[0].ns;
-  document.getElementById("t1").innerHTML=`<table><thead><tr><th>SKU</th><th>Family</th><th>Net sales</th><th class="num">$</th><th class="num">Units</th><th class="num">Margin</th><th class="num">vs LY</th></tr></thead><tbody>`+
-    rows.map(r=>`<tr><td><b>${r.sku}</b></td><td>${r.f}</td><td><span class="bar" style="width:${Math.round(150*r.ns/max)}px"></span></td><td class="num">${fmt$(r.ns)}</td><td class="num">${r.u.toLocaleString("en-US")}</td><td class="num">${(r.m*100).toFixed(1)} %</td><td class="num"><span class="pill ${r.g>=0?"up":"down"}">${r.g>=0?"+":""}${r.g.toFixed(1)} %</span></td></tr>`).join("")+`</tbody></table>`;
-})();
-
-// Chart 3: weekly orders (line) and units (area)
-(function(){
-  const svg=document.getElementById("c3"); const W=740,H=330,L=56,R=56,T=18,B=36; const n=26;
-  const units=[],orders=[]; for(let i=0;i<n;i++){const base=13000+i*260+Math.sin(i/3)*1800; units.push(base*(0.95+rnd()*0.1)); orders.push(units[i]/(1.82+rnd()*0.1));}
-  const maxU=Math.max(...units)*1.12, maxO=Math.max(...orders)*1.12; const x=i=>L+i*((W-L-R)/(n-1));
-  const yU=v=>T+(H-T-B)*(1-v/maxU), yO=v=>T+(H-T-B)*(1-v/maxO);
-  let g=""; for(let k=0;k<=4;k++){const y=T+(H-T-B)*(1-k/4); g+=`<line x1="${L}" x2="${W-R}" y1="${y}" y2="${y}" stroke="#1d2d48"/><text x="${L-8}" y="${y+4}" fill="#9aa6bb" font-size="11" text-anchor="end">${fmtK(maxU*k/4)}</text><text x="${W-R+8}" y="${y+4}" fill="#9aa6bb" font-size="11">${fmtK(maxO*k/4)}</text>`;}
-  const area=`M${x(0)},${H-B} `+units.map((v,i)=>`L${x(i)},${yU(v)}`).join(" ")+` L${x(n-1)},${H-B} Z`;
-  g+=`<path d="${area}" fill="rgba(43,196,221,.18)"/><path d="M${units.map((v,i)=>`${x(i)},${yU(v)}`).join(" L")}" fill="none" stroke="#2bc4dd" stroke-width="2.5"/>`;
-  g+=`<path d="M${orders.map((v,i)=>`${x(i)},${yO(v)}`).join(" L")}" fill="none" stroke="#b48cf2" stroke-width="2.5" stroke-dasharray="1 0"/>`;
-  for(let i=0;i<n;i+=5){g+=`<text x="${x(i)}" y="${H-B+18}" fill="#c7d0e0" font-size="12" text-anchor="middle">W${i+19}</text>`;}
-  g+=`<text x="${L}" y="${H-4}" fill="#9aa6bb" font-size="11">Units (left axis, area) · Orders (right axis, line) · weeks 19–44 of 2026</text>`;
-  svg.innerHTML=g;
+  const map=L.map("map",{zoomControl:false,attributionControl:true}).setView([38.2,-96.8],3.15);
+  L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}",{attribution:"Tiles © Esri",maxZoom:16}).addTo(map);
+  const metros=[[40.71,-74.0,42],[34.05,-118.24,38],[41.88,-87.63,30],[29.76,-95.37,34],[33.45,-112.07,22],[39.95,-75.17,20],[29.42,-98.49,18],[32.72,-117.16,20],[32.78,-96.8,30],[37.34,-121.89,16],[30.27,-97.74,20],[30.33,-81.66,16],[39.76,-86.16,12],[39.96,-82.99,13],[35.23,-80.84,16],[47.61,-122.33,18],[39.74,-104.99,20],[38.9,-77.04,16],[42.36,-71.06,16],[36.17,-86.78,14],[25.76,-80.19,22],[33.75,-84.39,24],[45.52,-122.68,12],[36.17,-115.14,12],[43.04,-87.91,8],[44.98,-93.27,12],[35.47,-97.52,8],[38.63,-90.2,10],[36.15,-95.99,8],[39.1,-94.58,10],[33.52,-86.81,10],[28.54,-81.38,16],[27.95,-82.46,18],[35.08,-106.65,8],[40.76,-111.89,8],[43.62,-116.2,6],[41.26,-95.94,6],[32.3,-90.18,6],[30.45,-91.19,8],[35.96,-83.92,8],[37.54,-77.44,10],[42.33,-83.05,10],[41.5,-81.69,10],[40.44,-79.99,10],[42.89,-78.88,6],[39.29,-76.61,10],[35.78,-78.64,12],[32.08,-81.1,8],[26.12,-80.14,12],[33.58,-101.86,6],[31.76,-106.49,8],[27.8,-97.4,6],[46.88,-96.79,4],[44.95,-123.03,5],[38.58,-121.49,10],[36.74,-119.77,8],[34.75,-92.29,6],[41.6,-93.6,6],[43.07,-89.4,6]];
+  metros.forEach(m=>{const k=m[2]>14?2:1; for(let i=0;i<k;i++){const r=m[2]*(0.6+rnd()*0.8); L.circleMarker([m[0]+(rnd()-0.5)*0.9, m[1]+(rnd()-0.5)*1.2],{radius:Math.max(2.5,Math.sqrt(r)*1.15),color:"#1fbf5a",weight:1,fillColor:"#22c55e",fillOpacity:0.5}).addTo(map);}});
 })();
 </script>
 </body>

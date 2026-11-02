@@ -111,7 +111,7 @@
 
     <section class="flow">
       <div class="card"><h2><i>A</i>AWD</h2><div class="sub">Central inventory · Amazon Warehousing &amp; Distribution</div>
-        <div class="stats"><div class="stat"><div class="k">Active SKUs</div><div class="v">64</div></div><div class="stat"><div class="k">Need purchase</div><div class="v">11</div></div><div class="stat"><div class="k">Units to buy</div><div class="v">18.4K</div><div class="n" style="font-size:11px;color:var(--muted)">331 cases · 19 pallets</div></div><div class="stat"><div class="k">Critical / Warning</div><div class="v"><span style="color:var(--destructive)">4</span> <span style="color:var(--warning);font-size:18px">/ 1</span></div></div></div>
+        <div class="stats"><div class="stat"><div class="k">Active SKUs</div><div class="v">64</div></div><div class="stat"><div class="k">Need purchase</div><div class="v">8</div></div><div class="stat"><div class="k">Units to buy</div><div class="v">18.5K</div><div class="n" style="font-size:11px;color:var(--muted)">377 cases · 24 pallets</div></div><div class="stat"><div class="k">Critical / Warning</div><div class="v"><span style="color:var(--destructive)">4</span> <span style="color:var(--warning);font-size:18px">/ 1</span></div></div></div>
         <span class="btn primary">View purchase orders</span></div>
       <div class="card"><h2><i>T</i>TARGET</h2><div class="sub">Retail marketplace · DC replenishment</div>
         <div class="stats"><div class="stat"><div class="k">Active SKUs</div><div class="v">5</div></div><div class="stat"><div class="k">Need purchase</div><div class="v">1</div></div><div class="stat"><div class="k">Units to buy</div><div class="v">24.0K</div><div class="n" style="font-size:11px;color:var(--muted)">500 cases · 28 pallets</div></div><div class="stat"><div class="k">Critical / Warning</div><div class="v"><span style="color:var(--destructive)">1</span> <span style="color:var(--warning);font-size:18px">/ 0</span></div></div></div>
@@ -128,14 +128,14 @@
 
     <section class="guide">
       <header><div><h2>AWD Purchase Guide</h2><p>What to order from the AWD network today: units, cases and pallets, and the math behind each number. Cadence every 27 d · next window Nov 24.</p></div>
-        <div class="scope"><span class="on">Needs order (11)</span><span>All SKUs (64)</span><span>Critical only</span></div></header>
+        <div class="scope"><span class="on">Needs order (8)</span><span>All SKUs (64)</span><span>Critical only</span></div></header>
       <div class="kpis">
-        <div class="kpi"><div class="k">Lines to buy</div><div class="v">11</div><div class="n">of 64 active SKUs</div></div>
-        <div class="kpi"><div class="k">Units to buy</div><div class="v">18,420</div><div class="n">"Active only" hides 12 discontinued (28 units)</div></div>
-        <div class="kpi"><div class="k">Master cases</div><div class="v">331</div><div class="n">1 SKU without a case size</div></div>
-        <div class="kpi"><div class="k">Pallets</div><div class="v">19</div><div class="n">1 container</div></div>
-        <div class="kpi crit"><div class="k">Critical</div><div class="v">4</div><div class="n"><b>1 Warning</b> · 6,870 units involved</div></div>
-        <div class="kpi"><div class="k">Blocked lines</div><div class="v">2</div><div class="n">missing case size or lead time · 1,940 units held</div></div>
+        <div class="kpi"><div class="k">Lines to buy</div><div class="v">8</div><div class="n">of 64 active SKUs</div></div>
+        <div class="kpi"><div class="k">Units to buy</div><div class="v">18,516</div><div class="n">"Active only" hides 12 discontinued (28 units)</div></div>
+        <div class="kpi"><div class="k">Master cases</div><div class="v">377</div><div class="n">1 SKU without a case size</div></div>
+        <div class="kpi"><div class="k">Pallets</div><div class="v">24</div><div class="n">1 container (max 26)</div></div>
+        <div class="kpi crit"><div class="k">Critical</div><div class="v">4</div><div class="n"><b>1 Warning</b> · 16,896 units involved</div></div>
+        <div class="kpi"><div class="k">Blocked lines</div><div class="v">2</div><div class="n">missing case size or lead time · 1,620 units held</div></div>
       </div>
       <table>
         <thead><tr><th>SKU</th><th>Status</th><th class="num">Velocity/day</th><th class="num">On hand</th><th class="num">On order</th><th class="num">DOS</th><th class="num">Proj. DOS at ETA</th><th>Order by</th><th class="num">Days left</th><th class="num">Buy units</th><th class="num">Cases</th><th class="num">Pallets</th><th>Ready</th></tr></thead>
@@ -146,14 +146,14 @@
 </div>
 <script>
 const rows = [
-  {sku:"NW-KNEE-L", st:"c", v:41.6, oh:1340, oo:0, dos:32, pd:14, ob:"Oct 29", dl:-4, buy:7920, cs:165, pl:9, ready:"✓", open:true},
+  {sku:"NW-KNEE-L", st:"c", v:41.6, oh:1340, oo:0, dos:32, pd:0, ob:"Oct 29", dl:-4, buy:8016, cs:167, pl:10, ready:"✓", open:true},
   {sku:"NW-ANKL-M", st:"c", v:22.1, oh:980, oo:0, dos:44, pd:21, ob:"Nov 3", dl:1, buy:3360, cs:70, pl:4, ready:"✓"},
-  {sku:"NW-HEAD-OS", st:"c", v:18.4, oh:1010, oo:600, dos:55, pd:38, ob:"Nov 6", dl:4, buy:2880, cs:60, pl:3, ready:"✓"},
+  {sku:"NW-HEAD-OS", st:"c", v:18.4, oh:1010, oo:600, dos:55, pd:38, ob:"Nov 6", dl:4, buy:2880, cs:60, pl:4, ready:"✓"},
   {sku:"NW-BACK-XL", st:"c", v:9.7, oh:470, oo:0, dos:48, pd:26, ob:"Nov 7", dl:5, buy:1200, cs:25, pl:2, ready:"—  no lead time"},
   {sku:"NW-WRST-S", st:"w", v:12.3, oh:1510, oo:0, dos:123, pd:67, ob:"Nov 21", dl:19, buy:1440, cs:30, pl:2, ready:"✓"},
   {sku:"NW-ELBW-M", st:"o", v:7.9, oh:1910, oo:0, dos:242, pd:171, ob:"Dec 2", dl:30, buy:720, cs:15, pl:1, ready:"✓"},
-  {sku:"NW-NECK-OS", st:"o", v:5.2, oh:1480, oo:0, dos:285, pd:214, ob:"Dec 9", dl:37, buy:480, cs:10, pl:1, ready:"— no case size"},
-  {sku:"NW-CALF-L", st:"o", v:3.1, oh:1060, oo:0, dos:342, pd:271, ob:"Dec 15", dl:43, buy:420, cs:"—", pl:"—", ready:"✓"},
+  {sku:"NW-NECK-OS", st:"o", v:5.2, oh:1480, oo:0, dos:285, pd:214, ob:"Dec 9", dl:37, buy:480, cs:10, pl:1, ready:"✓"},
+  {sku:"NW-CALF-L", st:"o", v:3.1, oh:1060, oo:0, dos:342, pd:271, ob:"Dec 15", dl:43, buy:420, cs:"—", pl:"—", ready:"— no case size"},
 ];
 const label={c:"Critical",w:"Warning",o:"OK",n:"No velocity"};
 const f=n=>typeof n==="number"?n.toLocaleString("en-US"):n;
@@ -161,15 +161,15 @@ document.getElementById("rows").innerHTML = rows.map(r=>{
   const tr=`<tr class="${r.open?"open":""}"><td><b>${r.open?"▾ ":"▸ "}${r.sku}</b></td><td><span class="st ${r.st}">${label[r.st]}</span></td><td class="num">${r.v.toFixed(1)}</td><td class="num">${f(r.oh)}</td><td class="num">${r.oo?f(r.oo):'<span class="dim">0</span>'}</td><td class="num">${r.dos} d</td><td class="num">${r.pd} d</td><td>${r.ob}</td><td class="num" style="color:${r.dl<0?"var(--destructive)":"inherit"}">${r.dl<0?r.dl+" (late)":r.dl}</td><td class="num buy">${f(r.buy)}</td><td class="num">${f(r.cs)}</td><td class="num">${f(r.pl)}</td><td>${r.ready}</td></tr>`;
   if(!r.open) return tr;
   return tr+`<tr><td colspan="13" style="padding:0"><div class="why">
-    <div><h4>WHY 7,920 UNITS · the math, parcel by parcel</h4>
+    <div><h4>WHY 8,016 UNITS · the math, parcel by parcel</h4>
       <ol>
         <li>Demand to cover: last year's sales over the coverage window <b>Nov 3 → May 20</b> (198 d = lead 70 + safety 60 + cadence 27 + holiday buffer 41) = <b>8,640</b> units <span class="src">· ORDER_UP_TO_UNITS</span></li>
         <li>Growth adjustment <b>× 1.08</b> (YTD vs LY, same channel) → <b>9,331</b> <span class="src">· SEASONAL_GROWTH_RATIO</span></li>
         <li>Minus stock on hand across the network <b>− 1,340</b> (FBA 610 · AWD 580 · Main 150) <span class="src">· AVAILABLE_UNITS</span></li>
         <li>Minus purchase orders arriving within the lead time <b>− 0</b> <span class="src">· ON_ORDER_WITHIN_LT</span></li>
-        <li>Base needed <b>7,991</b> → rounded to master cases of 48 → <b>7,920 units = 165 cases = 9 pallets</b>; MOQ 2,000 satisfied <span class="src">· RECOMMENDED_QTY_FINAL</span></li>
+        <li>Base needed <b>7,991</b> → rounded up to master cases of 48 → <b>8,016 units = 167 cases = 10 pallets</b> (18 cases per pallet); MOQ 2,000 satisfied <span class="src">· RECOMMENDED_QTY_FINAL</span></li>
       </ol>
-      <div class="verdict"><b>Critical.</b> Days of stock 32 ≤ safety stock 60. Order was due <b>Oct 29</b> (4 days late): at 41.6 units/day the network runs out <b>Dec 4</b>, 36 days before a PO placed today would land (ETA <b>Jan 9</b>, lead time 70 d). Projected days of stock at ETA: <b>14</b>.</div>
+      <div class="verdict"><b>Critical.</b> Days of stock 32 ≤ safety stock 60. Order was due <b>Oct 29</b> (4 days late): at 41.6 units/day the network runs out <b>Dec 4</b>, 38 days before a PO placed today would land (ETA <b>Jan 11</b>, lead time 70 d). Projected days of stock at ETA: <b>0</b>; the PO restores <b>193 days</b> (8,016 / 41.6).</div>
     </div>
     <div><h4>PARAMETERS THIS SKU USED</h4>
       <div class="params"><span>Family</span><b>Knee Sleeve</b><span>SKU status</span><b>Active</b><span>Velocity</span><b>41.6 / day</b><span>Window used</span><b>Nov 3, 2025 → May 20, 2026</b><span>Window source</span><b>CONFIGURED (198 d)</b><span>Safety stock</span><b>60 d</b><span>Lead time</span><b>70 d</b><span>Purchase frequency</span><b>27 d · Mondays</b><span>Case size</span><b>48 units</b><span>Cases per pallet</span><b>18</b><span>MOQ</span><b>2,000 units</b><span>Holidays in window</span><b>Black Friday, Christmas, CNY (+41 d)</b></div>

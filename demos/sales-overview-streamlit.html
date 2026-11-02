@@ -69,7 +69,7 @@
       <div><label>Order status</label><div class="sel">Complete, Shipped <span>▾</span></div></div>
       <div><label>Metric</label><div class="toggle"><span class="on">Net Sales</span><span>GP</span><span>Orders</span></div></div>
     </div>
-    <div class="alert">⚠ Anomaly detected (Cortex ML): net sales on Oct 27 were 38 % above the expected band for a Monday. Likely cause: the e-mail campaign on sleeping bags (orders +61 %). No action needed; forecast retrained Sunday.</div>
+    <div class="alert">⚠ Anomaly detected (Cortex ML): net sales on Oct 27 were 38 % above the expected band for a Tuesday. Likely cause: the e-mail campaign on sleeping bags (orders +61 %). No action needed; forecast retrained Sunday.</div>
     <div class="kpi-row" id="kpis"></div>
     <hr>
     <div class="charts">
@@ -88,7 +88,7 @@
 let s = 7; const rnd = () => (s = (s * 1664525 + 1013904223) % 4294967296) / 4294967296;
 const $ = n => "$" + Math.round(n).toLocaleString("en-US");
 const cards=[
- {icon:"💲",color:"#00B4D8",title:"Net Sales ($)",value:"$1,284,310",delta:"+12.4%",sub:"Avg Ticket",subv:"$96.40",prev:"Previous 30 days",lines:["Net Sales: <span class='kpi-sub-val'>$1,142,900</span>","Avg Ticket: <span class='kpi-sub-val'>$93.10</span>"]},
+ {icon:"💲",color:"#00B4D8",title:"Net Sales ($)",value:"$1,284,310",delta:"+12.4%",sub:"Avg Ticket",subv:"$96.40",prev:"Previous 30 days",lines:["Net Sales: <span class='kpi-sub-val'>$1,142,900</span>","Avg Ticket: <span class='kpi-sub-val'>$93.43</span>"]},
  {icon:"📈",color:"#2DC653",title:"Gross Profit ($)",value:"$402,580",delta:"+15.1%",sub:"Margin",subv:"31.3%",prev:"Previous 30 days",lines:["Gross Profit: <span class='kpi-sub-val'>$349,700</span>","Margin: <span class='kpi-sub-val'>30.6%</span>"]},
  {icon:"🛒",color:"#00B4D8",title:"Orders",value:"13,322",delta:"+8.9%",badge:"Free S. Orders: 4,118",sub:"Orders/Day",subv:"444.1",prev:"Previous 30 days",lines:["Orders: <span class='kpi-sub-val'>12,233</span>","Orders/Day: <span class='kpi-sub-val'>407.8</span>"]},
  {icon:"🚚",color:"#2DC653",title:"Shipping Revenue ($)",value:"$71,940",delta:"-3.2%",sub:"Shipping($) / NS($)",subv:"5.6%",prev:"Previous 30 days",lines:["Shipping Revenue: <span class='kpi-sub-val'>$74,300</span>","Shipping/NS: <span class='kpi-sub-val'>6.5%</span>"]},
