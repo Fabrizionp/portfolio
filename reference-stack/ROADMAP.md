@@ -11,7 +11,7 @@ read about them. Repository: `medallion-reference-stack` (separate, linked from 
 | 1 | Portfolio hub (this repository): case studies, practices, fit matrix | done |
 | 2 | Medallion dbt project + Dagster + contract + CI gates | planned |
 | 3 | Visualization layer: Streamlit purchase guide, Power BI semantic model (PBIP/TMDL), Looker Studio and Tableau Public rebuilds of the command panel | planned |
-| 4 | PySpark variant of Silver (Fabric / Databricks postings) | planned |
+| 4 | PySpark variant of Silver and a Kafka → Iceberg micro-stream (Spark and streaming postings) | planned |
 
 ## Phase 2 · what gets built
 

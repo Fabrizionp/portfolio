@@ -1,8 +1,9 @@
 # Fabrizio Pescarmona · Data platform, BI and agentic delivery
 
-**Data Team Lead and data solutions architect.** I architect and build multi-client data platforms on Snowflake
-(Medallion layers, dbt, Dagster, CI/CD), the BI products that sit on top of them, and the agentic delivery system
-that lets my team and AI agents ship through governed pull requests. Founder of Laboris AI, a labor-litigation
+**Data Team Lead and data solutions architect.** I architect, build and operate production data platforms and
+data products: multi-client platforms on Snowflake (Medallion layers, dbt, Dagster, contracts and governance, CI/CD),
+the BI and multi-tenant SaaS products on top of them, and the agentic delivery system that lets my team and AI
+agents ship through governed pull requests. Founder of Laboris AI, a labor-litigation
 data SaaS that uses LLMs for structured extraction.
 
 This repository complements my CV with **evidence**: case studies with architecture, numbers and the practices
