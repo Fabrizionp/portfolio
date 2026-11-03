@@ -4,6 +4,11 @@ All notable changes to this portfolio. The format follows [Keep a Changelog](htt
 and the versions follow [Semantic Versioning](https://semver.org/): a new case study or practice is a minor
 version, a correction is a patch.
 
+## [1.2.2] · 2026-11-03
+
+### Changed
+- The checks rerun when a pull request title is edited.
+
 ## [1.2.1] · 2026-11-02
 
 ### Fixed
@@ -41,6 +46,7 @@ version, a correction is a patch.
 - The hub: seven case studies, two practice documents, the reference-stack roadmap, three synthetic-data demos
   and their screenshots.
 
+[1.2.2]: https://github.com/Fabrizionp/portfolio/compare/v1.2.1...v1.2.2
 [1.2.1]: https://github.com/Fabrizionp/portfolio/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/Fabrizionp/portfolio/compare/v1.1.1...v1.2.0
 [1.1.1]: https://github.com/Fabrizionp/portfolio/compare/v1.1.0...v1.1.1
