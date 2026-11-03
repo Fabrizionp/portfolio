@@ -1,0 +1,57 @@
+# The portfolio practices what its playbook says: every pull request to main runs the same checks, and the
+# title must be a Conventional Commit because it becomes the squash commit. The three checks are the ones a
+# reader would run by hand: do the links resolve, do the diagrams render, do the demo pages load without an error.
+name: checks
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: checks-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  title:
+    name: Conventional Commits title
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: amannn/action-semantic-pull-request@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          types: |
+            feat
+            fix
+            docs
+            chore
+            refactor
+            ci
+          subjectPattern: ^(?![A-Z]).+$
+
+  content:
+    name: Links, diagrams and demos
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Relative links and images resolve
+        run: node tools/check-links.mjs
+      - name: Every Mermaid diagram parses and renders
+        run: node tools/check-mermaid.mjs
+      - name: Demo pages load without errors
+        run: node tools/render-demos.mjs

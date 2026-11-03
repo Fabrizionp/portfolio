@@ -1,5 +1,10 @@
 # Fabrizio Pescarmona · Data platform, BI and agentic delivery
 
+[![checks](https://github.com/Fabrizionp/portfolio/actions/workflows/checks.yml/badge.svg)](https://github.com/Fabrizionp/portfolio/actions/workflows/checks.yml)
+[![version](https://img.shields.io/github/v/tag/Fabrizionp/portfolio?label=version&color=1f5fa8)](CHANGELOG.md)
+[![license](https://img.shields.io/badge/code-MIT-2bc4dd)](LICENSE)
+[![content](https://img.shields.io/badge/content-CC%20BY%204.0-b48cf2)](LICENSE-CC-BY-4.0.txt)
+
 **Data Team Lead and data solutions architect.** I architect, build and operate production data platforms and
 data products: multi-client platforms on Snowflake (Medallion layers, dbt, Dagster, contracts and governance, CI/CD),
 the BI and multi-tenant SaaS products on top of them, and the agentic delivery system that lets my team and AI
@@ -72,3 +77,10 @@ item, AI review). Status and acceptance criteria are in the roadmap.
 - Every number in a case study was measured in the system it describes (test counts, line counts, row counts,
   cost) and is dated where it matters.
 - Client names appear only where they are already public in my CV; otherwise the client is described by sector.
+
+## How this repository is maintained
+
+Every change arrives by pull request with a Conventional Commits title, squash-merged, and the `checks` workflow
+runs the three checks a reader would run by hand: relative links resolve, every Mermaid diagram parses and renders
+in the real library, and the demo pages load without an error (`npm run check`). Versions and dates are in the
+[changelog](CHANGELOG.md). Code is MIT; written content and diagrams are CC BY 4.0.
