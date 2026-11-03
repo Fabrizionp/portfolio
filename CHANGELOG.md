@@ -4,6 +4,11 @@ All notable changes to this portfolio. The format follows [Keep a Changelog](htt
 and the versions follow [Semantic Versioning](https://semver.org/): a new case study or practice is a minor
 version, a correction is a patch.
 
+## [1.2.1] · 2026-11-02
+
+### Fixed
+- `LICENSE` is plain MIT so GitHub detects it; the content license note lives in the README and in `LICENSE-CC-BY-4.0.txt`.
+
 ## [1.2.0] · 2026-11-02
 
 ### Added
@@ -36,6 +41,7 @@ version, a correction is a patch.
 - The hub: seven case studies, two practice documents, the reference-stack roadmap, three synthetic-data demos
   and their screenshots.
 
+[1.2.1]: https://github.com/Fabrizionp/portfolio/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/Fabrizionp/portfolio/compare/v1.1.1...v1.2.0
 [1.1.1]: https://github.com/Fabrizionp/portfolio/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/Fabrizionp/portfolio/compare/v1.0.0...v1.1.0
