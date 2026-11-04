@@ -1,0 +1,48 @@
+# The reference stack builds from a fresh clone on every pull request: seeds regenerated and compared, dbt build on
+# DuckDB under the two-minute budget (AC-1), a second build that must change nothing, and the committed samples
+# compared with the build. No secrets, no warehouse account.
+name: reference-stack
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: reference-stack-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: dbt build on DuckDB
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: reference-stack
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: reference-stack/requirements.txt
+      - run: pip install -r requirements.txt
+      - name: Seeds match the generator
+        run: python data/generate.py --check
+      - name: dbt deps
+        run: dbt deps --profiles-dir .
+        working-directory: reference-stack/dbt
+      - name: dbt build from a fresh clone in under two minutes (AC-1)
+        run: timeout 120 dbt build --profiles-dir .
+        working-directory: reference-stack/dbt
+      - name: A second build changes nothing (the incremental model is idempotent)
+        run: dbt build --profiles-dir .
+        working-directory: reference-stack/dbt
+      - name: Committed samples match the build
+        run: python scripts/export_samples.py --check

@@ -4,6 +4,19 @@ All notable changes to this portfolio. The format follows [Keep a Changelog](htt
 and the versions follow [Semantic Versioning](https://semver.org/): a new case study or practice is a minor
 version, a correction is a patch.
 
+## [1.3.0] · 2026-11-04
+
+### Added
+- `reference-stack/`, wave 1 of Phase 2: a runnable dbt Medallion project on DuckDB over deterministic synthetic
+  data (five seeds, five Bronze views, three Silver tables where late corrections and status changes are resolved,
+  two Gold tables under enforced contracts, one status rule and one reorder macro, 45 tests), `data/generate.py`
+  with a drift check, `scripts/export_samples.py` with a drift check, and the Gold samples in `samples/`.
+- GitHub Actions `reference-stack` workflow: seeds compared with the generator, `dbt build` from a fresh clone
+  under a two-minute budget, a second build, samples compared with the build.
+
+### Changed
+- README and roadmap: the reference stack is runnable; AC-1 and AC-7 met, AC-8 (idempotent rebuild) added and met.
+
 ## [1.2.2] · 2026-11-03
 
 ### Changed
@@ -46,6 +59,7 @@ version, a correction is a patch.
 - The hub: seven case studies, two practice documents, the reference-stack roadmap, three synthetic-data demos
   and their screenshots.
 
+[1.3.0]: https://github.com/Fabrizionp/portfolio/compare/v1.2.2...v1.3.0
 [1.2.2]: https://github.com/Fabrizionp/portfolio/compare/v1.2.1...v1.2.2
 [1.2.1]: https://github.com/Fabrizionp/portfolio/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/Fabrizionp/portfolio/compare/v1.1.1...v1.2.0

@@ -1,0 +1,129 @@
+version: 2
+
+models:
+  - name: gld_sales_daily_by_channel
+    description: Daily sales by channel for the sales overview. Contract enforced; the shape the dashboards read.
+    config:
+      contract:
+        enforced: true
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [order_date, channel_code]
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "gross_profit <= net_revenue"
+    columns:
+      - name: order_date
+        data_type: date
+        data_tests: [not_null]
+      - name: channel_code
+        data_type: varchar
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('brz_channels')
+                field: channel_code
+      - name: orders
+        data_type: integer
+      - name: units
+        data_type: integer
+      - name: net_revenue
+        data_type: decimal(18,2)
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                inclusive: true
+      - name: cogs
+        data_type: decimal(18,2)
+      - name: gross_profit
+        data_type: decimal(18,2)
+      - name: customers
+        data_type: integer
+
+  - name: gld_inventory_needs
+    description: Stock, demand, status and the quantity to buy or transfer per channel and SKU, as of `as_of_date`. The table behind a command panel and a purchase guide.
+    config:
+      contract:
+        enforced: true
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [as_of_date, channel_code, sku]
+      - dbt_utils.expression_is_true:
+          name: recommended_qty_is_whole_cases
+          arguments:
+            expression: "recommended_qty % case_size = 0"
+      - dbt_utils.expression_is_true:
+          name: a_missing_metric_shows_its_reason
+          arguments:
+            expression: "days_of_cover is not null or days_of_cover_note is not null"
+    columns:
+      - name: as_of_date
+        data_type: date
+        data_tests: [not_null]
+      - name: channel_code
+        data_type: varchar
+        data_tests: [not_null]
+      - name: channel_kind
+        data_type: varchar
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [buy, transfer]
+      - name: supplied_from
+        data_type: varchar
+      - name: sku
+        data_type: varchar
+        data_tests: [not_null]
+      - name: product_name
+        data_type: varchar
+      - name: category
+        data_type: varchar
+      - name: on_hand
+        data_type: integer
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                inclusive: true
+      - name: on_order
+        data_type: integer
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                inclusive: true
+      - name: units_window
+        data_type: integer
+      - name: units_per_day
+        data_type: decimal(10,2)
+      - name: safety_stock
+        data_type: integer
+      - name: lead_time_days
+        data_type: integer
+      - name: purchase_frequency_days
+        data_type: integer
+      - name: days_of_cover
+        data_type: decimal(10,1)
+      - name: days_of_cover_note
+        data_type: varchar
+      - name: status
+        data_type: varchar
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [Critical, Warning, OK]
+      - name: recommended_qty
+        data_type: integer
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                inclusive: true
+      - name: recommended_cases
+        data_type: integer
+      - name: case_size
+        data_type: integer

@@ -1,0 +1,60 @@
+version: 2
+
+models:
+  - name: slv_orders
+    description: One row per order, the latest loaded version.
+    columns:
+      - name: order_id
+        data_tests: [not_null, unique]
+      - name: order_status
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [fulfilled, cancelled, returned]
+      - name: channel_code
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('brz_channels')
+                field: channel_code
+
+  - name: slv_order_lines
+    description: One row per sold line (cancelled orders excluded), the latest version of each, with revenue, cost and gross profit.
+    columns:
+      - name: line_key
+        data_tests: [not_null, unique]
+      - name: order_status
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [fulfilled, returned]
+      - name: sku
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('brz_products')
+                field: sku
+      - name: net_revenue
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                inclusive: true
+    data_tests:
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "gross_profit = net_revenue - cogs"
+
+  - name: slv_inventory_daily
+    description: One row per day, channel and SKU.
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [snapshot_date, channel_code, sku]
+    columns:
+      - name: on_hand
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                inclusive: true

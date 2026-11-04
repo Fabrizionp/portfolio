@@ -1,0 +1,6 @@
+channel_code,channel_name,kind,supplied_from,sells,lead_time_days,purchase_frequency_days,safety_days
+AWD,Amazon Warehousing and Distribution,buy,,false,21,14,10
+SHOPIFY,"Shopify store, own 3PL",buy,,true,14,7,7
+TARGET,Target marketplace,buy,,true,18,14,10
+FBA,Fulfilled by Amazon,transfer,AWD,true,7,7,5
+WALMART,Walmart marketplace,transfer,SHOPIFY,true,5,7,5

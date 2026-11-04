@@ -1,0 +1,43 @@
+sku,product_name,category,size,unit_cost,unit_price,case_size
+NW-CT-01-S,Gel Pack S,Cold therapy,S,7.45,16.99,36
+NW-CT-01-M,Gel Pack M,Cold therapy,M,8.28,18.99,36
+NW-CT-01-L,Gel Pack L,Cold therapy,L,9.52,23.99,36
+NW-CT-02-S,Knee Wrap S,Cold therapy,S,6.39,19.99,12
+NW-CT-02-M,Knee Wrap M,Cold therapy,M,7.10,19.99,12
+NW-CT-02-L,Knee Wrap L,Cold therapy,L,8.16,24.99,12
+NW-CT-03-S,Shoulder Wrap S,Cold therapy,S,16.04,38.99,12
+NW-CT-03-M,Shoulder Wrap M,Cold therapy,M,17.82,43.99,12
+NW-CT-03-L,Shoulder Wrap L,Cold therapy,L,20.49,54.99,12
+NW-CT-04-S,Ankle Wrap S,Cold therapy,S,13.34,34.99,24
+NW-CT-04-M,Ankle Wrap M,Cold therapy,M,14.82,41.99,24
+NW-CT-04-L,Ankle Wrap L,Cold therapy,L,17.04,39.99,24
+NW-CT-05-S,Back Wrap S,Cold therapy,S,8.94,24.99,36
+NW-CT-05-M,Back Wrap M,Cold therapy,M,9.93,27.99,36
+NW-CT-05-L,Back Wrap L,Cold therapy,L,11.42,30.99,36
+NW-CT-06-S,Eye Mask S,Cold therapy,S,8.48,21.99,36
+NW-CT-06-M,Eye Mask M,Cold therapy,M,9.43,25.99,36
+NW-CT-06-L,Eye Mask L,Cold therapy,L,10.84,26.99,36
+NW-CP-01-S,Knee Sleeve S,Compression,S,4.15,10.99,12
+NW-CP-01-M,Knee Sleeve M,Compression,M,4.61,10.99,12
+NW-CP-01-L,Knee Sleeve L,Compression,L,5.30,12.99,12
+NW-CP-02-S,Elbow Sleeve S,Compression,S,11.87,27.99,12
+NW-CP-02-M,Elbow Sleeve M,Compression,M,13.19,40.99,12
+NW-CP-02-L,Elbow Sleeve L,Compression,L,15.17,47.99,12
+NW-CP-03-S,Calf Sleeve S,Compression,S,5.71,17.99,36
+NW-CP-03-M,Calf Sleeve M,Compression,M,6.35,18.99,36
+NW-CP-03-L,Calf Sleeve L,Compression,L,7.30,17.99,36
+NW-CP-04-S,Wrist Brace S,Compression,S,11.64,32.99,24
+NW-CP-04-M,Wrist Brace M,Compression,M,12.94,29.99,24
+NW-CP-04-L,Wrist Brace L,Compression,L,14.88,41.99,24
+NW-CP-05-S,Ankle Sleeve S,Compression,S,10.40,27.99,12
+NW-CP-05-M,Ankle Sleeve M,Compression,M,11.56,32.99,12
+NW-CP-05-L,Ankle Sleeve L,Compression,L,13.29,30.99,12
+NW-CP-06-S,Back Brace S,Compression,S,13.81,42.99,36
+NW-CP-06-M,Back Brace M,Compression,M,15.35,44.99,36
+NW-CP-06-L,Back Brace L,Compression,L,17.65,39.99,36
+NW-RC-01-STD,Massage Ball,Recovery,STD,4.49,13.99,12
+NW-RC-02-STD,Foam Roller,Recovery,STD,5.39,12.99,36
+NW-RC-03-STD,Neck Pillow,Recovery,STD,15.96,49.99,24
+NW-RC-04-STD,Heat Pad,Recovery,STD,15.38,45.99,24
+NW-RC-05-STD,Posture Band,Recovery,STD,8.06,23.99,24
+NW-RC-06-STD,Grip Trainer,Recovery,STD,8.79,23.99,24

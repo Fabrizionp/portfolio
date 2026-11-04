@@ -2,3 +2,11 @@ node_modules/
 Thumbs.db
 .DS_Store
 *.pbix
+.venv/
+reference-stack/dbt/target/
+reference-stack/dbt/dbt_packages/
+reference-stack/dbt/logs/
+*.duckdb
+*.duckdb.wal
+__pycache__/
+.user.yml
