@@ -1,0 +1,61 @@
+version: 2
+
+seeds:
+  - name: channels
+    description: The five channels of the synthetic brand. Buying channels receive purchase orders; transfer channels are supplied from a stocking channel.
+    config:
+      column_types:
+        channel_code: varchar
+        channel_name: varchar
+        kind: varchar
+        supplied_from: varchar
+        sells: boolean
+        lead_time_days: integer
+        purchase_frequency_days: integer
+        safety_days: integer
+
+  - name: products
+    description: 42 SKUs of a fictional wellness brand, three categories, sizes, cost, price and case size.
+    config:
+      column_types:
+        sku: varchar
+        product_name: varchar
+        category: varchar
+        size: varchar
+        unit_cost: decimal(10,2)
+        unit_price: decimal(10,2)
+        case_size: integer
+
+  - name: orders
+    description: Order headers as loaded, one row per version. Some orders appear twice because their status changed after the first load.
+    config:
+      column_types:
+        order_id: varchar
+        channel_code: varchar
+        customer_id: varchar
+        order_ts: timestamp
+        order_status: varchar
+        loaded_at: timestamp
+
+  - name: order_lines
+    description: Order lines as loaded, one row per version. About two percent were delivered twice, the second time with the corrected quantity.
+    config:
+      column_types:
+        order_id: varchar
+        line_no: integer
+        sku: varchar
+        quantity: integer
+        unit_price: decimal(10,2)
+        discount: decimal(10,2)
+        loaded_at: timestamp
+
+  - name: inventory_snapshots
+    description: Daily stock per channel and SKU as loaded; about one percent of the rows were delivered twice.
+    config:
+      column_types:
+        snapshot_date: date
+        channel_code: varchar
+        sku: varchar
+        on_hand: integer
+        on_order: integer
+        loaded_at: timestamp

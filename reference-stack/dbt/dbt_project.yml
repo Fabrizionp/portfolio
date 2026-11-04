@@ -1,0 +1,35 @@
+name: reference_stack
+version: 1.0.0
+config-version: 2
+profile: reference_stack
+
+model-paths: [models]
+seed-paths: [seeds]
+macro-paths: [macros]
+test-paths: [tests]
+target-path: target
+clean-targets: [target, dbt_packages]
+
+vars:
+  as_of_date: "2026-10-31"      # the day the Gold tables describe; the seeds end on this day
+  velocity_window_days: 28      # sales window behind units_per_day
+  lookback_days: 3              # how far an incremental run re-reads, so late corrections replace their first version
+
+seeds:
+  reference_stack:
+    +schema: raw
+    +quote_columns: false
+
+models:
+  reference_stack:
+    bronze:
+      +schema: bronze
+      +materialized: view
+    silver:
+      +schema: silver
+      +materialized: table
+    gold:
+      +schema: gold
+      +materialized: table
+      +contract:
+        enforced: true

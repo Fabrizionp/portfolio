@@ -1,6 +1,7 @@
 # Fabrizio Pescarmona · Data platform, BI and agentic delivery
 
 [![checks](https://github.com/Fabrizionp/portfolio/actions/workflows/checks.yml/badge.svg)](https://github.com/Fabrizionp/portfolio/actions/workflows/checks.yml)
+[![reference-stack](https://github.com/Fabrizionp/portfolio/actions/workflows/reference-stack.yml/badge.svg)](https://github.com/Fabrizionp/portfolio/actions/workflows/reference-stack.yml)
 [![version](https://img.shields.io/github/v/tag/Fabrizionp/portfolio?label=version&color=1f5fa8)](CHANGELOG.md)
 [![license](https://img.shields.io/badge/code-MIT-2bc4dd)](LICENSE)
 [![content](https://img.shields.io/badge/content-CC%20BY%204.0-b48cf2)](LICENSE-CC-BY-4.0.txt)
@@ -12,7 +13,8 @@ agents ship through governed pull requests. Founder of Laboris AI, a labor-litig
 data SaaS that uses LLMs for structured extraction.
 
 This repository complements my CV with **evidence**: case studies with architecture, numbers and the practices
-that made each system hold, the operating model I run my team on, and the plan for a runnable reference stack.
+that made each system hold, the operating model I run my team on, and a runnable reference stack that reproduces
+the patterns on synthetic data.
 
 > CV: [linkedin.com/in/fabrizio-pescarmona](https://linkedin.com/in/fabrizio-pescarmona) ·
 > fabrizionpcontato@gmail.com · São Paulo, Brazil · open to remote
@@ -23,7 +25,7 @@ that made each system hold, the operating model I run my team on, and the plan f
 
 | Pillar | What it means in my work | Where to look |
 |---|---|---|
-| **Data platform engineering** | Medallion architecture (Bronze/Silver/Gold), dbt monorepos, Dagster orchestration with a CDC sensor, Iceberg lakehouse, Snowflake, CI/CD that deploys the pipeline and the apps | [CS-01](case-studies/01-multi-client-dbt-dagster-platform.md), [CS-04](case-studies/04-lakehouse-every-15-minutes.md) |
+| **Data platform engineering** | Medallion architecture (Bronze/Silver/Gold), dbt monorepos, Dagster orchestration with a CDC sensor, Iceberg lakehouse, Snowflake, CI/CD that deploys the pipeline and the apps | [CS-01](case-studies/01-multi-client-dbt-dagster-platform.md), [CS-04](case-studies/04-lakehouse-every-15-minutes.md), [reference stack](reference-stack/README.md) (runnable) |
 | **BI and data visualization products** | Translating a business question into a surface people adopt: KPI hierarchy, one truth per figure, self-serve filters, automated distribution, monitoring | [CS-03](case-studies/03-inventory-intelligence-product.md), [CS-07](case-studies/07-self-service-bi-and-design-process.md) |
 | **Agentic delivery with engineering governance** | AI agents execute inside a governed repository: a card per task, a branch per card, pull requests under a size budget, required checks, AI review, human merge, decisions carried forward | [CS-06](case-studies/06-agentic-delivery-at-scale.md), [Playbook](practices/agentic-delivery-playbook.md) |
 | **Requirements, contracts and design thinking** | Specs with EARS acceptance criteria that name their test, versioned producer/consumer contracts, acceptance tables, stakeholder review triage | [CS-02](case-studies/02-producer-consumer-contract.md), [Method](practices/requirements-and-design-thinking.md) |
@@ -63,12 +65,15 @@ The same analytical question on a 15-minute lakehouse, in the Streamlit design l
 - [Agentic delivery playbook](practices/agentic-delivery-playbook.md): the operating model, step by step, with the rules that are enforced by CI rather than by memory, and the lessons that shaped them.
 - [Requirements and design thinking](practices/requirements-and-design-thinking.md): how a need becomes a spec, a contract, a surface and an acceptance table.
 
-## Reference stack (planned)
+## Reference stack (runnable)
 
-[`reference-stack/`](reference-stack/ROADMAP.md) will be the public, synthetic-data reproduction of the patterns above:
-a dbt Medallion project (DuckDB locally, Snowflake-ready), Dagster definitions with a manifest-driven CDC sensor,
-a versioned contract with generated types, and the CI gates (lint, build, contract, shadow build, PR size, work
-item, AI review). Status and acceptance criteria are in the roadmap.
+[`reference-stack/`](reference-stack/README.md) is the public, synthetic-data reproduction of the patterns above,
+written from scratch for this portfolio: a dbt Medallion project on DuckDB (Bronze views, Silver where late
+corrections and status changes are resolved, Gold under enforced contracts), one status rule and one reorder macro
+for the whole product, 45 tests, and a CI job that builds it from a fresh clone on every pull request under a
+two-minute budget. Clone, `pip install`, `dbt build`. The [roadmap](reference-stack/ROADMAP.md) lists the next
+waves: contract sync with generated types, shadow builds, Dagster with a manifest-driven sensor, the governance
+workflows and the visualization layer.
 
 ## Evidence policy
 
@@ -82,5 +87,6 @@ item, AI review). Status and acceptance criteria are in the roadmap.
 
 Every change arrives by pull request with a Conventional Commits title, squash-merged, and the `checks` workflow
 runs the three checks a reader would run by hand: relative links resolve, every Mermaid diagram parses and renders
-in the real library, and the demo pages load without an error (`npm run check`). Versions and dates are in the
-[changelog](CHANGELOG.md). Code is MIT; written content and diagrams are CC BY 4.0.
+in the real library, and the demo pages load without an error (`npm run check`). The `reference-stack` workflow
+builds the dbt project from a fresh clone, twice, and compares the committed samples with the build. Versions and
+dates are in the [changelog](CHANGELOG.md). Code is MIT; written content and diagrams are CC BY 4.0.

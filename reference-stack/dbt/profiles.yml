@@ -1,0 +1,9 @@
+# Committed on purpose: the stack runs on a local DuckDB file, so there is nothing secret here.
+# `dbt build --profiles-dir .` from this directory uses it.
+reference_stack:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: reference_stack.duckdb
+      threads: 4
